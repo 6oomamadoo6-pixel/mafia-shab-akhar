@@ -85,11 +85,16 @@ profile:['پروفایل بازیکن','<label>نام نمایشی</label><input
 settings:['تنظیمات','راوی، جلوه‌های صوتی و زمان‌بندی مسابقه.','<button class="btn secondary" onclick="toggleVoice()">راوی: '+(speechOn?'روشن':'خاموش')+'</button><button class="btn secondary" onclick="toast(\'تنظیمات ذخیره شد\')">ذخیره</button>']
 };const d=data[key]||data.rank;$('page').innerHTML='<div class="topline"><h1>'+d[0]+'</h1><button class="back" onclick="goHome()">بازگشت</button></div><div class="panel"><p>'+d[1]+'</p>'+d[2]+'</div>';if(key==='stats')renderHistory()}
 function toggleVoice(){speechOn=!speechOn;openPage('settings')}
+let matchmakingToken=0;
 function beginMatch(){
- const roles=['مافیا','مافیا','مافیا','دکتر','کارآگاه','شهروند','شهروند','شهروند','شهروند','شهروند'].sort(()=>Math.random()-.5);
- game={players:[{name:localStorage.nick||'بازیکن شب آخر',role:roles[0],you:true,alive:true,personality:'تو'} ,...names.map((n,i)=>({name:n,role:roles[i+1],you:false,alive:true,personality:bios[i],style:i%4}))],round:0,phase:'معرفی',log:[],history:[],votes:{},lastTarget:null,protected:null,checked:null};
- meRole=roles[0];intro();
+ const token=++matchmakingToken, playerName=localStorage.nick||'بازیکن شب آخر';
+ const lobby=[{name:playerName,you:true,alive:true}];
+ panel('🚪 در حال تشکیل میز بازی','<span class="pill">حالت آفلاین</span><span class="pill">۹ بات</span><p id="lobbyStatus">بازیکنان در حال ورود به اتاق هستند...</p><div class="players" id="lobbySeats">'+Array.from({length:10},(_,i)=>'<div class="player">'+(i===0?'👑 '+playerName:'＋ جای خالی')+'</div>').join('')+'</div><button class="btn secondary" onclick="cancelMatchmaking()">لغو تشکیل اتاق</button>');
+ let index=0;
+ function fillSeat(){if(token!==matchmakingToken)return;if(index<names.length){lobby.push({name:names[index],you:false,alive:true,personality:bios[index],style:index%4});index++;$('lobbySeats').innerHTML=Array.from({length:10},(_,i)=>{const p=lobby[i];return '<div class="player '+(p?'you':'')+'">'+(p?(p.you?'👑 ':'👤 ')+p.name:'＋ جای خالی')+'</div>'}).join('');$('lobbyStatus').textContent='بازیکنان حاضر: '+lobby.length+' از ۱۰';setTimeout(fillSeat,420);}else{ $('lobbyStatus').textContent='ظرفیت تکمیل شد؛ در حال پخش نقش‌ها...';setTimeout(()=>{if(token!==matchmakingToken)return;const roles=['مافیا','مافیا','مافیا','دکتر','کارآگاه','شهروند','شهروند','شهروند','شهروند','شهروند'].sort(()=>Math.random()-.5);game={players:lobby.map((p,i)=>({...p,role:roles[i]})),round:0,phase:'معرفی',log:[],history:[],votes:{},lastTarget:null,protected:null,checked:null};meRole=roles[0];intro();},800);}}
+ setTimeout(fillSeat,350);
 }
+function cancelMatchmaking(){matchmakingToken++;goHome();}
 function panel(title,body){$('home').style.display='none';$('bottom').style.display='none';$('page').style.display='block';$('page').innerHTML='<div class="topline"><h1>'+title+'</h1><button class="back" onclick="leaveGame()">خروج</button></div><div class="panel">'+body+'</div>'}
 function leaveGame(){game=null;goHome()}
 function log(n,t){game.log.push({n,t});if(game.log.length>100)game.log.shift()}
@@ -107,7 +112,7 @@ function nightActions(){
  const target=alive().filter(p=>!p.you&&p.role!=='مافیا')[Math.floor(Math.random()*Math.max(1,alive().filter(p=>!p.you&&p.role!=='مافیا').length))];game.lastTarget=target?.name;dayBreak();
 }
 function alive(){return game.players.filter(p=>p.alive)}
-function targetButtons(heal,mafia){return '<div class="players">'+alive().filter(p=>!p.you).map(p=>'<button class="option" onclick="nightPick(\''+p.name+'\',\''+(heal?'heal':mafia?'kill':'check')+'\')">'+p.name+'</button>').join('')+'</div><button class="btn secondary" onclick="dayBreak()">رد کردن نوبت</button>'}
+function targetButtons(heal,mafia){return '<div class="players">'+alive().filter(p=>!p.you&&(!mafia||p.role!=='مافیا')).map(p=>'<button class="option" onclick="nightPick(\''+p.name+'\',\''+(heal?'heal':mafia?'kill':'check')+'\')">'+p.name+'</button>').join('')+'</div><button class="btn secondary" onclick="dayBreak()">رد کردن نوبت</button>'}
 function nightPick(name,kind){const p=game.players.find(x=>x.name===name);if(kind==='kill'){game.lastTarget=name;log('مافیا','هدف شب انتخاب شد.')}if(kind==='heal'){game.protected=name;log('دکتر','یک نفر را نجات داد.')}if(kind==='check'){game.checked=name;log('کارآگاه','نتیجه استعلام: '+name+' '+(p.role==='مافیا'?'مافیاست.':'مافیا نیست.'));toast(p.role==='مافیا'?'نتیجه: مافیا':'نتیجه: شهروند')}dayBreak()}
 function botNightActions(){const living=alive();if(meRole!=='مافیا'){const targets=living.filter(p=>p.role!=='مافیا');if(targets.length)game.lastTarget=targets[Math.floor(Math.random()*targets.length)].name;}if(meRole!=='دکتر'){const candidates=living.filter(p=>!p.you);if(candidates.length&&Math.random()<.75)game.protected=candidates[Math.floor(Math.random()*candidates.length)].name;}if(meRole!=='کارآگاه'){const suspects=living.filter(p=>!p.you);if(suspects.length)game.botChecked=suspects[Math.floor(Math.random()*suspects.length)].name;}}
 function dayBreak(){botNightActions();
