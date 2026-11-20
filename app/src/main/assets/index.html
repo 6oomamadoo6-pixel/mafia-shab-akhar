@@ -2,114 +2,129 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#09080d"><title>مافیا | شب آخر</title>
+<meta name="theme-color" content="#08070b"><title>مافیا | شب آخر</title>
 <style>
-:root{--gold:#ffc65a;--gold2:#a86b21;--cream:#fff0d4;--red:#b51e32;--ink:#09080d}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#07070b;color:#fff4e5;font-family:Tahoma,Arial,sans-serif}
-body{background:radial-gradient(ellipse at 50% 30%,#35202b 0,#17131c 38%,#07070b 78%);overflow-x:hidden}
-button{font:inherit;cursor:pointer}.app{max-width:520px;min-height:100dvh;margin:auto;position:relative;overflow:hidden;padding:13px 12px 100px;background:linear-gradient(180deg,#080911d9,#0a0809 72%)}
-.sky{position:absolute;inset:0 0 auto;height:570px;pointer-events:none;overflow:hidden;background:radial-gradient(circle at 52% 36%,#f8d18a 0 3%,#e9a65b 3.4%,#7d5270 4%,transparent 12%),radial-gradient(ellipse at 50% 45%,#28304b 0,transparent 55%),linear-gradient(180deg,#090b19,#241b2c 70%,transparent)}
-.sky:before{content:"";position:absolute;top:40px;left:10%;width:75%;height:390px;background:repeating-linear-gradient(90deg,transparent 0 17px,#ffc16a55 18px 20px,transparent 21px 32px);clip-path:polygon(0 45%,10% 35%,15% 45%,25% 25%,37% 40%,48% 17%,56% 38%,68% 30%,77% 40%,88% 20%,100% 36%,100% 100%,0 100%);opacity:.65}
-.sky:after{content:"";position:absolute;top:100px;right:16%;height:300px;width:4px;background:linear-gradient(#74b7ff,#f7c56e,#fff);box-shadow:0 0 12px #70baff,0 0 30px #f4b74e}
-.top{position:relative;z-index:2;display:flex;align-items:center;gap:8px;justify-content:space-between}
-.profile{display:flex;align-items:center;gap:8px;min-width:0}.avatar{width:62px;height:62px;border-radius:50%;border:3px solid var(--gold);background:radial-gradient(circle at 50% 35%,#a77c64,#29202a 60%,#09080d);display:grid;place-items:center;font-size:34px;box-shadow:0 0 15px #ffc65a88}
-.username{font-weight:bold;font-size:15px;white-space:nowrap}.level{font-size:11px;color:var(--gold);margin-top:6px}.bar{height:6px;width:90px;background:#39313a;border-radius:9px;margin-top:4px;overflow:hidden}.bar i{display:block;width:58%;height:100%;background:linear-gradient(90deg,#ffdc78,#e99b22)}
-.wallets{display:flex;gap:5px}.wallet{border:1px solid #8f642d;background:#17131bdc;border-radius:24px;padding:7px 9px;font-size:12px;white-space:nowrap;box-shadow:0 3px 12px #0008}.wallet b{color:#ffdf9a}.gear{font-size:24px;background:none;border:0;color:#eee}
-.rank{position:relative;z-index:2;margin:14px 0 0 auto;width:190px;border:1px solid #815528;border-radius:17px;background:#100d12e8;padding:9px 12px;display:flex;align-items:center;gap:10px;color:#f8d58e}.rank strong{font-size:22px;color:var(--gold)}
-.daily{position:absolute;z-index:2;top:155px;left:12px;border:1px solid #96652c;border-radius:15px;background:#17121adf;padding:10px;width:94px;text-align:center;font-size:12px;box-shadow:0 4px 18px #0009}.daily span{font-size:30px;display:block}
-.art{position:relative;z-index:1;height:380px;margin-top:4px;display:flex;align-items:flex-end;justify-content:center;text-align:center}
-.cast{position:absolute;inset:5px 0 45px;display:flex;align-items:center;justify-content:space-around;pointer-events:none}
-.person{width:29%;height:85%;border-radius:48% 48% 18% 18%;background:linear-gradient(145deg,#a33d44,#251b26 48%,#09090d 80%);border:1px solid #a96d48;box-shadow:0 12px 35px #000b;display:flex;align-items:flex-start;justify-content:center;padding-top:18px;font-size:65px;text-shadow:0 5px 8px #000;transform:rotate(-5deg)}
-.person:nth-child(2){height:100%;width:37%;font-size:88px;background:linear-gradient(145deg,#5a4b4a,#17151b 60%,#08080b);transform:translateY(-3px);border-color:#d4a65d}
-.person:nth-child(3){transform:rotate(6deg);background:linear-gradient(145deg,#34404a,#191922 55%,#08080b)}
-.brand{position:relative;z-index:2;text-shadow:0 4px 4px #000,0 0 20px #ffc65a88;margin-bottom:0}
-.brand h1{font-size:clamp(54px,15vw,76px);line-height:1;margin:0;font-weight:1000;color:#f7e0b4;-webkit-text-stroke:1px #6c431e;text-shadow:0 5px 0 #4b2b17,0 8px 20px #000}
-.brand div{color:#ffc14d;font-size:26px;font-weight:bold;margin-top:8px;letter-spacing:2px}
-.start{position:relative;z-index:3;width:96%;margin:-1px auto 14px;display:flex;align-items:center;justify-content:center;gap:15px;border:2px solid #ffe17d;border-radius:28px;padding:16px 10px;background:linear-gradient(100deg,#ffb31e,#ffe27a 48%,#ff9e17);color:#241305;font-size:29px;font-weight:1000;box-shadow:0 0 10px #ffb72c,0 0 30px #ff8c20aa,inset 0 2px 8px #fff7}
-.start:active{transform:scale(.98)}.start small{font-size:35px}
-.tiles{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.tile{min-height:100px;border:1px solid #a5753c;border-radius:22px;background:linear-gradient(135deg,#1a171beF,#110e13ee);box-shadow:0 5px 15px #0009;display:flex;align-items:center;padding:12px 10px;gap:9px;text-align:right;color:#f8e9d5}
-.tile .ico{font-size:35px;color:#e9b96e;min-width:48px;text-align:center;text-shadow:0 0 12px #ffb33c66}.tile b{font-size:15px;display:block}.tile small{display:block;color:#bdb0a5;font-size:11px;margin-top:8px;line-height:1.6}
-.bottom{position:fixed;z-index:5;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:#0a080cf5;border:1px solid #49372b;border-bottom:0;border-radius:18px 18px 0 0;box-shadow:0 -8px 30px #000b;padding:7px 4px max(8px,env(safe-area-inset-bottom))}
-.nav{border:0;background:none;color:#c9b9a8;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;padding:5px 0}.nav span{font-size:25px}.nav.active{color:#ffd36b;text-shadow:0 0 12px #ffb52b}.nav.active span{filter:drop-shadow(0 0 7px #ffbd3c)}
-.screen{display:none;position:relative;z-index:4;border:1px solid #8d642f;border-radius:20px;background:#100e14f5;padding:18px;margin-top:18px;min-height:360px}.screen.show{display:block}.screen h2{color:var(--gold);margin:0 0 12px}.back{border:1px solid #8b622d;background:#211820;color:#ffdb94;padding:10px 14px;border-radius:12px;margin-top:15px;width:100%}
-.playergrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.pitem{padding:10px;border:1px solid #57412b;border-radius:12px;background:#211c24;font-size:13px}.chat{height:180px;overflow:auto;background:#08080c;border-radius:12px;padding:8px;font-size:12px;line-height:1.9}.chat p{border-bottom:1px solid #29232a;padding:4px;margin:0}.gold{color:var(--gold)}.hide{display:none!important}
-@media(max-width:380px){.wallet{font-size:10px;padding:6px}.avatar{width:52px;height:52px}.username{font-size:13px}.art{height:340px}.person{font-size:52px}.person:nth-child(2){font-size:72px}.tile{padding:9px 6px}.tile .ico{font-size:29px;min-width:38px}.tile b{font-size:13px}}
-
-#waiting{position:relative;z-index:4;margin-top:18px;border:1px solid #a4773c;border-radius:22px;background:linear-gradient(145deg,#17121cf5,#09080df5);padding:18px;min-height:380px}
-.wait-ring{width:110px;height:110px;border:4px solid #38291b;border-top-color:#ffc65a;border-radius:50%;margin:18px auto;display:grid;place-items:center;animation:spin 1.4s linear infinite}
-.wait-ring span{animation:spin 1.4s linear infinite reverse;font-size:35px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0}
-.slot{aspect-ratio:1;border:1px solid #604728;border-radius:12px;background:#141118;display:grid;place-items:center;color:#a9957e;font-size:11px;text-align:center;overflow:hidden}
-.slot.filled{border-color:#d5a34e;background:linear-gradient(145deg,#392719,#171018);color:#ffe1a2}
-.slot b{font-size:19px;display:block}.server-field{width:100%;background:#09080d;color:#fff;border:1px solid #76552e;border-radius:12px;padding:12px;direction:ltr;text-align:left;margin:8px 0}
+:root{--gold:#ffd16b;--red:#a7192b;--glass:#100d13eF;--line:#a8793d;--cream:#fff0d6}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#08070b;color:#fff3e2;font-family:Tahoma,Arial,sans-serif}button,input{font:inherit}button{cursor:pointer}
+#app{position:relative;width:100%;max-width:520px;min-height:100dvh;margin:auto;overflow:hidden;background:#09080c;padding-bottom:80px}
+#art{position:fixed;z-index:0;inset:0;width:100%;max-width:520px;height:100dvh;left:50%;transform:translateX(-50%);object-fit:cover;object-position:center top}
+#shade{position:fixed;z-index:1;inset:0;background:linear-gradient(180deg,#08070b12 0%,#08070b0a 50%,#08070be8 100%);pointer-events:none}
+#home,#page{position:relative;z-index:2;min-height:100dvh}
+#home{height:100dvh;max-height:100dvh}
+.hot{position:absolute;border:0;background:transparent;border-radius:20px;outline:none}
+.hot:active{background:#ffc44b20;box-shadow:inset 0 0 0 2px #ffd16b88}
+#h-start{left:13%;right:13%;top:59%;height:10%}
+#h-private{left:4%;width:44%;top:69%;height:9%}
+#h-public{right:4%;width:44%;top:69%;height:9%}
+#h-rank{left:4%;width:44%;top:79%;height:9%}
+#h-shop{right:4%;width:48%;top:79%;height:9%}
+#h-daily{left:1%;width:24%;top:10%;height:12%}
+#h-home{right:80%;width:19%;bottom:0;height:10%}
+#h-missions{right:60%;width:20%;bottom:0;height:10%}
+#h-stats{right:40%;width:20%;bottom:0;height:10%}
+#h-friends{right:20%;width:20%;bottom:0;height:10%}
+#h-profile{right:0;width:20%;bottom:0;height:10%}
+#page{display:none;padding:18px 14px 100px;min-height:100dvh;background:linear-gradient(180deg,#09080b2c,#09080bd9 36%,#09080bf5)}
+.panel{border:1px solid #a8793d;border-radius:20px;background:linear-gradient(145deg,#17111beF,#09080bf2);box-shadow:0 10px 35px #000b;padding:16px;margin-top:10px}
+h1,h2{margin:0 0 12px;color:var(--gold)}h1{font-size:23px}h2{font-size:19px}
+p{line-height:1.8;color:#e4d4c1;font-size:13px}
+.btn{width:100%;border:1px solid #f2c36c;border-radius:14px;background:linear-gradient(100deg,#b66c16,#ffe08a,#c37b1d);color:#231406;font-weight:bold;padding:13px;margin-top:9px;box-shadow:0 0 15px #ffb32d44}
+.btn.secondary{background:#201821;color:#f6d99f;border-color:#8d642f;box-shadow:none}
+.btn.danger{background:linear-gradient(90deg,#761324,#c83c3c);color:#fff;border-color:#ec7676}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.tile{border:1px solid #8d642f;border-radius:15px;background:#17121ceF;color:#f6e7d0;padding:13px;text-align:right;min-height:72px}.tile b{display:block;color:var(--gold);margin-bottom:6px}.muted{font-size:11px;color:#b9a895}.pill{display:inline-block;border:1px solid #966c35;color:#ffdf9d;border-radius:20px;padding:5px 9px;font-size:11px;margin:2px}
+.players{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:12px 0}.player{border:1px solid #60482c;border-radius:12px;background:#201923;padding:9px;font-size:12px;min-height:48px}.player.dead{opacity:.42;filter:grayscale(1);text-decoration:line-through}.player.you{border-color:#ffd16b;box-shadow:0 0 10px #ffd16b44}
+.chat{max-height:230px;overflow:auto;background:#08070bdc;border:1px solid #493421;border-radius:12px;padding:10px;font-size:12px;line-height:1.9}.chat p{margin:3px 0;border-bottom:1px solid #30232a;padding:4px}.gold{color:var(--gold)}
+.option{display:block;width:100%;padding:11px;margin:7px 0;text-align:right;border:1px solid #8e693a;border-radius:12px;background:#201821;color:#fff0d7}.option.selected{border-color:#ffd16b;background:#493019}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:8px}.back{border:1px solid #76562e;background:#18131a;color:#ffdda0;border-radius:12px;padding:8px 12px}
+#notice{position:fixed;z-index:9;left:50%;bottom:88px;transform:translateX(-50%);background:#211820;border:1px solid #d2a252;border-radius:12px;padding:10px 16px;display:none;max-width:90%;font-size:12px}
+.bottom{position:fixed;z-index:6;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:none;grid-template-columns:repeat(5,1fr);background:#09080bf2;border:1px solid #503923;border-bottom:0;border-radius:16px 16px 0 0;padding:5px 3px max(6px,env(safe-area-inset-bottom))}
+.nav{border:0;background:transparent;color:#c9b9a8;font-size:10px;padding:5px 0}.nav span{display:block;font-size:21px;margin-bottom:3px}.nav.active{color:#ffd16b}
+input{width:100%;border:1px solid #8d642f;border-radius:10px;padding:11px;background:#08070b;color:white}
+@media(max-width:380px){.panel{padding:12px}.btn{padding:11px}.players{gap:5px}}
 </style></head>
-<body><main class="app"><div class="sky"></div>
-<header class="top"><div class="profile"><div class="avatar">🕴🏻</div><div><div class="username">بازیکن شب آخر ✎</div><div class="level">Lv.1 <div class="bar"><i></i></div></div></div></div><div class="wallets"><div class="wallet">🪙 <b>۱۲۵,۶۰۰</b> ＋</div><div class="wallet">💎 <b>۳,۲۵۰</b> ＋</div></div><button class="gear" onclick="showScreen('settings')">⚙</button></header>
-<div class="rank" onclick="showScreen('ranking')"><span style="font-size:32px">🏆</span><div>رتبه شما:<br><strong>#۲۱۴۷</strong></div><span>❯</span></div>
-<div class="daily" onclick="showScreen('missions')"><span>🎁</span>جوایز روزانه 🔴</div>
-<section id="lobby"><div class="art"><div class="cast"><div class="person">👩🏻</div><div class="person">🕴🏻</div><div class="person">🕶️</div></div><div class="brand"><h1>مافیا</h1><div>━━ شب آخر ━━</div></div></div>
-<button class="start" onclick="startGame()"><small>🎲</small> شروع بازی <small>❯</small></button>
-<div class="tiles"><button class="tile" onclick="showScreen('private')"><span class="ico">👥</span><span><b>اتاق خصوصی</b><small>با دوستانت بازی کن　›</small></span></button><button class="tile" onclick="showScreen('public')"><span class="ico">◎</span><span><b>اتاق عمومی</b><small>ورود به بازی تصادفی　›</small></span></button><button class="tile" onclick="showScreen('ranking')"><span class="ico">📈</span><span><b>رتبه‌بندی</b><small>برترین بازیکنان　›</small></span></button><button class="tile" onclick="showScreen('shop')"><span class="ico">🏪</span><span><b>فروشگاه</b><small>آیتم‌ها و امکانات ویژه　›</small></span></button></div></section>
-<section id="waiting" class="hide"><h2>🎭 در انتظار بازیکنان</h2><p id="serverStatus">در حال اتصال به سرور...</p><div class="wait-ring"><span>🌙</span></div><h2 style="text-align:center"><b id="waitCount">۰</b> / ۱۰ بازیکن</h2><div class="slots" id="waitSlots"></div><p style="text-align:center;color:#c8b49c;font-size:12px">با تکمیل ظرفیت، مسابقه خودکار شروع می‌شود.</p><button class="back" onclick="leaveQueue()">لغو انتظار و بازگشت</button></section>
-<section id="game" class="screen"><span class="gold" id="phase">شب اول</span><h2 id="heading">شب فرا رسیده...</h2><p id="hint">نقش شما مشخص می‌شود.</p><div id="choices"></div><div class="playergrid" id="players"></div><div class="chat" id="chat"></div><button class="back" onclick="backLobby()">بازگشت به لابی</button></section>
-<section id="private" class="screen"><h2>👥 اتاق خصوصی</h2><p>این بخش در نسخه آزمایشی هنوز فعال نشده است.</p><button class="back" onclick="backLobby()">بازگشت</button></section>
-<section id="public" class="screen"><h2>◎ اتاق عمومی</h2><p>اتصال بازیکنان واقعی در نسخه‌های بعدی اضافه می‌شود. فعلاً با ۹ بات بازی کن.</p><button class="back" onclick="startPractice()">تمرین آفلاین با بات‌ها</button><button class="back" onclick="backLobby()">بازگشت</button></section>
-<section id="ranking" class="screen"><h2>🏆 رتبه‌بندی</h2><p>جدول رتبه‌بندی در نسخه آزمایشی نمایشی است.</p><button class="back" onclick="backLobby()">بازگشت</button></section>
-<section id="shop" class="screen"><h2>💎 فروشگاه</h2><p>فروشگاه و آیتم‌ها به‌زودی اضافه می‌شوند.</p><button class="back" onclick="backLobby()">بازگشت</button></section>
-<section id="missions" class="screen"><h2>🎁 مأموریت‌ها</h2><p>هر روز وارد بازی شو و مأموریت‌ها را کامل کن.</p><button class="back" onclick="backLobby()">بازگشت</button></section>
-<section id="stats" class="screen"><h2>📊 آمار</h2><p>آمار بازی‌ها پس از تکمیل سیستم مسابقه نمایش داده می‌شود.</p><button class="back" onclick="backLobby()">بازگشت</button></section>
-<section id="friends" class="screen"><h2>👥 دوستان</h2><p>فهرست دوستان در نسخه‌های بعدی فعال می‌شود.</p><button class="back" onclick="backLobby()">بازگشت</button></section>
-<section id="profile" class="screen"><h2>🕴️ پروفایل</h2><p>بازیکن شب آخر<br>سطح ۱</p><button class="back" onclick="backLobby()">بازگشت</button></section>
-<section id="settings" class="screen"><h2>⚙ تنظیمات</h2><p>آدرس سرور آنلاین:</p><input id="serverUrlInput" class="server-field" placeholder="https://your-server.onrender.com"><button class="back" onclick="saveServerUrl(document.getElementById(&quot;serverUrlInput&quot;).value);alert(&quot;آدرس ذخیره شد&quot;)">ذخیره آدرس سرور</button><p>موسیقی و صدا در نسخه آزمایشی غیرفعال است.</p><button class="back" onclick="backLobby()">بازگشت</button></section>
-<nav class="bottom"><button class="nav active" onclick="navTo('lobby',this)"><span>⌂</span>خانه</button><button class="nav" onclick="navTo('missions',this)"><span>📋</span>ماموریت‌ها</button><button class="nav" onclick="navTo('stats',this)"><span>🏆</span>آمار</button><button class="nav" onclick="navTo('friends',this)"><span>👥</span>دوستان</button><button class="nav" onclick="navTo('profile',this)"><span>👤</span>پروفایل</button></nav>
-</main>
+<body>
+<div id="app"><img id="art" src="lobby-reference.jpg" alt=""><div id="shade"></div>
+<section id="home">
+<button class="hot" id="h-start" aria-label="شروع بازی" onclick="beginMatch()"></button>
+<button class="hot" id="h-private" aria-label="اتاق خصوصی" onclick="openPage('rooms')"></button>
+<button class="hot" id="h-public" aria-label="بازی تمرینی" onclick="beginMatch()"></button>
+<button class="hot" id="h-rank" aria-label="رتبه بندی" onclick="openPage('rank')"></button>
+<button class="hot" id="h-shop" aria-label="فروشگاه" onclick="openPage('shop')"></button>
+<button class="hot" id="h-daily" aria-label="جوایز روزانه" onclick="openPage('missions')"></button>
+<button class="hot" id="h-home" aria-label="خانه" onclick="goHome()"></button>
+<button class="hot" id="h-missions" aria-label="ماموریت ها" onclick="openPage('missions')"></button>
+<button class="hot" id="h-stats" aria-label="آمار" onclick="openPage('stats')"></button>
+<button class="hot" id="h-friends" aria-label="دوستان" onclick="openPage('friends')"></button>
+<button class="hot" id="h-profile" aria-label="پروفایل" onclick="openPage('profile')"></button>
+</section>
+<section id="page"></section>
+<nav class="bottom" id="bottom">
+<button class="nav active" onclick="goHome()"><span>⌂</span>خانه</button><button class="nav" onclick="openPage('missions')"><span>🎁</span>ماموریت</button><button class="nav" onclick="openPage('stats')"><span>🏆</span>آمار</button><button class="nav" onclick="openPage('friends')"><span>♟</span>دوستان</button><button class="nav" onclick="openPage('profile')"><span>👤</span>پروفایل</button>
+</nav><div id="notice"></div></div>
 <script>
-const names=['آرمان','رها','سامان','نیلوفر','کامران','هستی','بردیا','ترانه','فرهاد'];const traits=['آروم و منطقی','شکاک و تند','شوخ‌طبع','کم‌حرف و مرموز','تحلیل‌گر'];let ppl=[],round=0,userRole='';
 const $=id=>document.getElementById(id);
-function showScreen(id){$('lobby').classList.toggle('hide',id!=='lobby');$('waiting').classList.toggle('hide',id!=='waiting');document.querySelectorAll('.screen').forEach(x=>x.classList.remove('show'));if(id!=='lobby'&&id!=='waiting')$(id).classList.add('show')}
-function navTo(id,el){document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));el.classList.add('active');showScreen(id)}
-function backLobby(){showScreen('lobby');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));document.querySelector('.nav').classList.add('active')}
-function startGame(){let roles=['مافیا','مافیا','مافیا','دکتر','کارآگاه','شهروند','شهروند','شهروند','شهروند','شهروند'];roles.sort(()=>Math.random()-.5);userRole=roles.pop();ppl=names.map((n,i)=>({name:n,role:roles[i],trait:traits[i%traits.length],alive:true}));round=1;showScreen('game');$('phase').textContent='شب اول';$('heading').textContent='نقش شما: '+userRole;$('hint').textContent='۱۰ نفر در بازی هستند؛ ۳ مافیا و ۷ شهروند. برای شروع مرحله شب ادامه بده.';$('chat').innerHTML='<p><b class="gold">راوی:</b> به تهران خوش آمدی. شب آخر آغاز شده است.</p>';render();night()}
-function render(){$('players').innerHTML=ppl.map(p=>'<div class="pitem">'+(p.alive?'🟢':'⚫')+' <b>'+p.name+'</b><br><small>'+p.trait+'</small></div>').join('')}
-function say(n,t){$('chat').innerHTML+='<p><b class="gold">'+n+':</b> '+t+'</p>';$('chat').scrollTop=$('chat').scrollHeight}
-function buttons(items,fn){$('choices').innerHTML=items.map((x,i)=>'<button class="back" onclick="'+fn+'('+i+')">'+x+'</button>').join('')}
-function aliveList(){return ppl.map((p,i)=>p.alive?i:-1).filter(i=>i>=0)}
-function night(){$('phase').textContent='شب '+round;$('heading').textContent='شهر به خواب می‌رود';$('hint').textContent='نقش شما: '+userRole+' — تصمیم شبانه‌ات را بگیر.';let list=aliveList();if(userRole==='مافیا')buttons(list.map(i=>'🎯 انتخاب هدف: '+ppl[i].name),'act');else if(userRole==='دکتر')buttons(list.map(i=>'🛡 نجات '+ppl[i].name),'act');else if(userRole==='کارآگاه')buttons(list.map(i=>'🔎 استعلام '+ppl[i].name),'act');else buttons(['🌙 بیدار شدن و رفتن به روز'],'dayStart')}
-function act(i){let list=aliveList(),target=list[i]??list[0];if(userRole==='کارآگاه'&&ppl[target])say('نتیجه استعلام',ppl[target].name+' '+(ppl[target].role==='مافیا'?'عضو مافیاست!':'مافیا نیست.'));else if(userRole==='مافیا'&&ppl[target])say('تیم مافیا','هدف انتخاب‌شده: '+ppl[target].name);else if(userRole==='دکتر')say('دکتر','نجات '+ppl[target].name+' ثبت شد.');$('choices').innerHTML='<button class="back" onclick="dayStart()">رفتن به روز</button>'}
-function dayStart(){$('phase').textContent='روز '+round;$('heading').textContent='جلسه شهروندان';$('hint').textContent='به حرف‌ها گوش کن و کسی را که مشکوک می‌دانی انتخاب کن.';let alive=aliveList();for(let k=0;k<4;k++){let p=ppl[alive[Math.floor(Math.random()*alive.length)]];if(p)say(p.name,['من دیشب صدایی شنیدم، باید دقیق‌تر بررسی کنیم.','رفتار بعضی‌ها عجیبه؛ نظرتون درباره '+ppl[alive[Math.floor(Math.random()*alive.length)]].name+' چیه؟','بی‌دلیل اتهام نزنید، مدرک بیارید.','من فعلاً بیشتر گوش می‌دم.'][k])}buttons(alive.map(i=>'🗳 رأی به '+ppl[i].name),'vote')}
-function vote(i){let list=aliveList(),target=list[i]??list[0];if(ppl[target]){ppl[target].alive=false;say('نتیجه رأی‌گیری',ppl[target].name+' از شهر خارج شد.');render()}if(aliveList().length<=4){$('heading').textContent='پایان بازی آزمایشی';$('hint').textContent='این نمونه اولیه هنوز همه قوانین برد و باخت را ندارد.';$('choices').innerHTML='<button class="back" onclick="startGame()">بازی دوباره</button>'}else{$('choices').innerHTML='<button class="back" onclick="round++;night()">شروع شب بعد</button>'}}
-</script><script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
-<script>
-let realtimeSocket=null,queueActive=false;
-const serverUrlKey='shabakhar_server_url';
-function getServerUrl(){return localStorage.getItem(serverUrlKey)||''}
-function saveServerUrl(v){localStorage.setItem(serverUrlKey,v.trim().replace(/\/$/,''))}
-function connectRealtime(){
- const url=getServerUrl();
- if(!url){showScreen('settings');alert('ابتدا آدرس سرور را در تنظیمات وارد کن.');return false}
- if(typeof io==='undefined'){alert('کتابخانه اتصال آنلاین بارگذاری نشد. اینترنت را بررسی کن.');return false}
- if(realtimeSocket?.connected)return true;
- $('serverStatus').textContent='در حال اتصال به سرور...';
- realtimeSocket=io(url,{transports:['websocket','polling'],timeout:15000,reconnection:true});
- realtimeSocket.on('connect',()=>{ $('serverStatus').textContent='متصل به سرور ✓';if(queueActive)realtimeSocket.emit('join_queue',{name:localStorage.getItem('shabakhar_player_name')||'بازیکن شب آخر'});});
- realtimeSocket.on('connect_error',e=>{$('serverStatus').textContent='اتصال ناموفق: '+e.message;});
- realtimeSocket.on('queue_joined',d=>{$('serverStatus').textContent='در صف انتظار هستی؛ جایگاه '+d.position;});
- realtimeSocket.on('queue_update',renderQueue);
- realtimeSocket.on('match_started',d=>{
-  queueActive=false;showScreen('game');$('phase').textContent=d.phase;$('heading').textContent='مسابقه شروع شد!';$('hint').textContent='نقش مخفی شما: '+d.myRole+' | کد: '+d.matchId.slice(0,8);
-  $('choices').innerHTML='<p class="gold">نقش شما محرمانه است؛ ۱۰ بازیکن واقعی وارد مسابقه شدند.</p>';
-  $('players').innerHTML=d.players.map((p,i)=>'<div class="pitem">🟢 <b>'+p.name+'</b><br><small>بازیکن '+(i+1)+'</small></div>').join('');
-  $('chat').innerHTML='<p><b class="gold">راوی:</b> ظرفیت اتاق تکمیل شد؛ شب معارفه آغاز می‌شود.</p>';
- });
- realtimeSocket.on('phase_changed',d=>{$('phase').textContent=d.phase+' '+(d.round||'');$('heading').textContent='مرحله '+d.phase;$('hint').textContent='مسابقه آنلاین در حال اجراست.';});
- realtimeSocket.on('game_event',d=>{if(d.type==='chat')say(d.message.name,d.message.text);else if(d.type==='notice')say('راوی',d.text);else if(d.type==='disconnect')say('سیستم',d.name+' اتصالش قطع شد.');});
- return true;
+const names=['آرمان','رها','سامان','نیلوفر','کامران','هستی','بردیا','ترانه','فرهاد'];
+const bios=['تحلیل‌گر و آرام','شکاک و تندزبان','شوخ‌طبع و پرحرف','کم‌حرف و مرموز','منطقی و دقیق','احساسی و زودباور','جسور و اتهام‌زن','محتاط و باهوش','اهل بلوف و بازی روانی'];
+const lines=[
+['من فعلاً دارم همه رو زیر نظر می‌گیرم.','به نظرم عجله برای رأی دادن اشتباهه.','یکی باید توضیح بده چرا این‌قدر ساکته.'],
+['این دفاعت اصلاً قانع‌کننده نبود!','من به رفتار آرمان مشکوکم، نه حرفش.','رأی من بر اساس تناقض‌های روز قبله.'],
+['بچه‌ها یکم آروم‌تر، هنوز چیزی ثابت نشده.','من با این تحلیل موافق نیستم.','چرا بحث رو عوض می‌کنی؟'],
+['ترجیح می‌دم بیشتر گوش کنم.','این رأی‌ها خیلی معنی‌دار بود.','حس می‌کنم یکی داره بازی رو هدایت می‌کنه.']
+];
+let game=null,meRole='',speechOn=true;
+function toast(t){$('notice').textContent=t;$('notice').style.display='block';setTimeout(()=>$('notice').style.display='none',2200)}
+function goHome(){$('home').style.display='block';$('page').style.display='none';$('bottom').style.display='none'}
+function openPage(key){$('home').style.display='none';$('page').style.display='block';$('bottom').style.display='grid';document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));const data={
+rooms:['اتاق‌های شب آخر','اتاق خصوصی تمرینی بساز؛ ۹ جایگاه دیگر با بات‌ها پر می‌شوند.','<button class="btn" onclick="beginMatch()">ساخت اتاق و شروع با بات‌ها</button><button class="btn secondary" onclick="toast(\'در نسخه آزمایشی فقط اتاق تمرینی آفلاین فعال است\')">اتاق دوستان (در دست توسعه)</button>'],
+rank:['لیگ شب آخر','جدول امتیازات محلی؛ با بردن مسابقه‌ها رتبه‌ات بهتر می‌شود.','<div class="tile">🥇 بازیکن برتر — ۲۴۸۰ امتیاز</div><div class="tile">🥈 شب‌گرد — ۲۲۱۰ امتیاز</div><div class="tile">🥉 کارآگاه — ۱۹۸۰ امتیاز</div>'],
+shop:['فروشگاه شب آخر','آواتار، قاب پروفایل، تاج و نشان‌های ظاهری؛ خرید واقعی در نسخه آزمایشی وجود ندارد.','<div class="grid"><button class="tile" onclick="toast(\'قاب طلایی به‌زودی\')">👑<b>قاب طلایی</b>قاب پروفایل</button><button class="tile" onclick="toast(\'آواتارها به‌زودی\')">🕶️<b>آواتارها</b>ظاهر بازیکن</button><button class="tile" onclick="toast(\'تاج‌ها به‌زودی\')">♛<b>تاج‌ها</b>نشان ویژه</button><button class="tile" onclick="toast(\'بسته ایموجی به‌زودی\')">✨<b>ایموجی‌ها</b>واکنش‌ها</button></div>'],
+missions:['ماموریت‌ها و جوایز','ماموریت‌های روزانه برای افزایش سکه و امتیاز محلی.','<div class="tile">🎁 یک مسابقه کامل کن <b>+۱۰۰ سکه</b></div><div class="tile">🗳 سه رأی درست ثبت کن <b>+۷۵ سکه</b></div><div class="tile">🔍 یک مافیا را پیدا کن <b>+۵۰ سکه</b></div>'],
+stats:['آمار و تاریخچه','نتایج مسابقه‌ها روی همین گوشی نگهداری می‌شوند.','<div id="history"></div>'],
+friends:['دوستان و گروه','در نسخه آفلاین، می‌توانی بازیکن‌های بات را به فهرست علاقه‌مندی‌ها اضافه کنی.','<div class="tile">👥 فهرست بازیکنان پیشنهادی</div><button class="btn secondary" onclick="toast(\'بخش گروه آفلاین در حال توسعه است\')">ساخت گروه محلی</button>'],
+profile:['پروفایل بازیکن','<label>نام نمایشی</label><input id="nick" value="'+(localStorage.nick||'بازیکن شب آخر')+'"><button class="btn" onclick="localStorage.nick=document.getElementById(\'nick\').value;toast(\'پروفایل ذخیره شد\')">ذخیره پروفایل</button><p>سطح ۱　 |　 تاج: تازه‌وارد</p>'],
+settings:['تنظیمات','راوی، جلوه‌های صوتی و زمان‌بندی مسابقه.','<button class="btn secondary" onclick="toggleVoice()">راوی: '+(speechOn?'روشن':'خاموش')+'</button><button class="btn secondary" onclick="toast(\'تنظیمات ذخیره شد\')">ذخیره</button>']
+};const d=data[key]||data.rank;$('page').innerHTML='<div class="topline"><h1>'+d[0]+'</h1><button class="back" onclick="goHome()">بازگشت</button></div><div class="panel"><p>'+d[1]+'</p>'+d[2]+'</div>';if(key==='stats')renderHistory()}
+function toggleVoice(){speechOn=!speechOn;openPage('settings')}
+function beginMatch(){
+ const roles=['مافیا','مافیا','مافیا','دکتر','کارآگاه','شهروند','شهروند','شهروند','شهروند','شهروند'].sort(()=>Math.random()-.5);
+ game={players:[{name:localStorage.nick||'بازیکن شب آخر',role:roles[0],you:true,alive:true,personality:'تو'} ,...names.map((n,i)=>({name:n,role:roles[i+1],you:false,alive:true,personality:bios[i],style:i%4}))],round:0,phase:'معرفی',log:[],history:[],votes:{},lastTarget:null,protected:null,checked:null};
+ meRole=roles[0];intro();
 }
-function renderQueue(d){const n=d.count||0;$('waitCount').textContent=n.toLocaleString('fa-IR');$('waitSlots').innerHTML=Array.from({length:10},(_,i)=>{const p=d.players?.[i];return '<div class="slot '+(p?'filled':'')+'"><span><b>'+(p?'👤':'＋')+'</b>'+(p?p.name:'جای خالی')+'</span></div>'}).join('');if(queueActive&&n<10)$('serverStatus').textContent='در انتظار بازیکنان دیگر... ('+n+'/10)';}
-function startGame(){queueActive=true;showScreen('waiting');if(!connectRealtime())return;if(realtimeSocket.connected)realtimeSocket.emit('join_queue',{name:localStorage.getItem('shabakhar_player_name')||'بازیکن شب آخر'});}
-function leaveQueue(){queueActive=false;if(realtimeSocket?.connected)realtimeSocket.emit('leave_queue');backLobby();}
-function startPractice(){startGameOffline();}
-function startGameOffline(){let r=['مافیا','مافیا','مافیا','دکتر','کارآگاه','شهروند','شهروند','شهروند','شهروند','شهروند'];r.sort(()=>Math.random()-.5);userRole=r.pop();ppl=names.map((n,i)=>({name:n,role:r[i],trait:traits[i%traits.length],alive:true}));round=1;showScreen('game');$('phase').textContent='تمرین آفلاین';$('heading').textContent='نقش شما: '+userRole;$('hint').textContent='این بازی با بات‌ها و بدون اتصال به سرور انجام می‌شود.';$('chat').innerHTML='<p><b class="gold">راوی:</b> تمرین آفلاین آغاز شد.</p>';render();night();}
+function panel(title,body){$('home').style.display='none';$('bottom').style.display='none';$('page').style.display='block';$('page').innerHTML='<div class="topline"><h1>'+title+'</h1><button class="back" onclick="leaveGame()">خروج</button></div><div class="panel">'+body+'</div>'}
+function leaveGame(){game=null;goHome()}
+function log(n,t){game.log.push({n,t});if(game.log.length>100)game.log.shift()}
+function sayNarrator(t){log('راوی',t)}
+function speak(t){if(!speechOn||!window.speechSynthesis)return;try{let u=new SpeechSynthesisUtterance(t);u.lang='fa-IR';u.rate=.94;speechSynthesis.speak(u)}catch(e){}}
+function intro(){sayNarrator('بازیکنان وارد میز شدند. ۱۰ نفر در مسابقه حضور دارند.');sayNarrator('نقش شما: '+meRole+'. نقش خود را محرمانه نگه دار.');panel('🎭 شب آخر | معرفی','<span class="pill">۱۰ بازیکن</span><span class="pill">۳ مافیا</span><span class="pill">سناریو کلاسیک</span><p>نقش شما با موفقیت تعیین شد. بازیکنان آماده‌اند. ابتدا معارفه انجام می‌شود و سپس شب اول آغاز خواهد شد.</p>'+playersHTML()+'<button class="btn" onclick="startNight()">شروع شب معارفه</button>')}
+function playersHTML(){return '<div class="players">'+game.players.map((p,i)=>'<div class="player '+(p.alive?'':'dead')+(p.you?' you':'')+'">'+(p.you?'👑 ':'👤 ')+p.name+(p.you?' (شما)':'')+'<br><span class="muted">'+(p.alive?'زنده':'حذف‌شده')+'</span></div>').join('')+'</div>'}
+function startNight(){game.phase='شب';if(game.round===0){game.round=1;sayNarrator('شب معارفه است؛ در این شب قتل انجام نمی‌شود.');panel('🌙 شب معارفه','<p>شهر به خواب می‌رود. مافیا اعضای تیم خود را می‌شناسند. نقش‌های ویژه برای شروع آماده می‌شوند.</p><button class="btn" onclick="dayIntro()">رفتن به روز معارفه</button>');return}nightActions()}
+function dayIntro(){game.phase='روز معارفه';sayNarrator('روز معارفه آغاز شد. هر بازیکن فرصت معرفی کوتاه دارد.');botTalk(5);panel('☀️ روز معارفه','<p>نوبت صحبت بازیکنان است. به سبک حرف‌زدن، اعتمادبه‌نفس و تناقض‌ها توجه کن.</p>'+chatHTML()+'<button class="btn" onclick="dayDiscussion()">شروع بحث و اتهام</button>')}
+function nightActions(){
+ game.phase='شب';game.protected=null;game.checked=null;
+ if(meRole==='مافیا'){panel('🌙 شب '+game.round,'<p>تیم مافیا بیدار است. یکی از بازیکنان را برای شلیک انتخاب کن.</p>'+targetButtons(false,true));return}
+ if(meRole==='دکتر'){panel('🌙 شب '+game.round,'<p>چه کسی را نجات می‌دهی؟</p>'+targetButtons(true,false));return}
+ if(meRole==='کارآگاه'){panel('🌙 شب '+game.round,'<p>هویت کدام بازیکن را بررسی می‌کنی؟</p>'+targetButtons(false,false));return}
+ const target=alive().filter(p=>!p.you&&p.role!=='مافیا')[Math.floor(Math.random()*Math.max(1,alive().filter(p=>!p.you&&p.role!=='مافیا').length))];game.lastTarget=target?.name;dayBreak();
+}
+function alive(){return game.players.filter(p=>p.alive)}
+function targetButtons(heal,mafia){return '<div class="players">'+alive().filter(p=>!p.you).map(p=>'<button class="option" onclick="nightPick(\''+p.name+'\',\''+(heal?'heal':mafia?'kill':'check')+'\')">'+p.name+'</button>').join('')+'</div><button class="btn secondary" onclick="dayBreak()">رد کردن نوبت</button>'}
+function nightPick(name,kind){const p=game.players.find(x=>x.name===name);if(kind==='kill'){game.lastTarget=name;log('مافیا','هدف شب انتخاب شد.')}if(kind==='heal'){game.protected=name;log('دکتر','یک نفر را نجات داد.')}if(kind==='check'){game.checked=name;log('کارآگاه','نتیجه استعلام: '+name+' '+(p.role==='مافیا'?'مافیاست.':'مافیا نیست.'));toast(p.role==='مافیا'?'نتیجه: مافیا':'نتیجه: شهروند')}dayBreak()}
+function dayBreak(){if(game.round===1&&game.phase==='شب'){dayIntro();return}
+ const killed=game.lastTarget?game.players.find(p=>p.name===game.lastTarget):null;
+ if(killed&&killed.alive&&killed.name!==game.protected){killed.alive=false;sayNarrator('صبح شد؛ '+killed.name+' در شب از بازی خارج شد.')}else sayNarrator('صبح شد؛ دیشب کسی از بازی خارج نشد.');
+ game.lastTarget=null;game.round++;checkWin();if(game)dayDiscussion()}
+function botTalk(count){for(let i=0;i<count;i++){let p=alive().filter(x=>!x.you)[i%Math.max(1,alive().filter(x=>!x.you).length)];if(!p)continue;let pool=lines[p.style];let t=pool[(game.round+i)%pool.length];log(p.name,t)}}
+function chatHTML(){return '<div class="chat">'+game.log.slice(-18).map(x=>'<p><b class="gold">'+x.n+':</b> '+x.t+'</p>').join('')+'</div>'}
+function dayDiscussion(){game.phase='بحث';botTalk(6);panel('🗣️ بحث روز '+game.round,'<p>بات‌ها بر اساس شخصیت خود صحبت می‌کنند. حرف‌هایشان را با رأی‌ها و رفتار شب‌های قبل مقایسه کن.</p>'+chatHTML()+'<p class="gold">نوبت توست؛ نظرت را بگو یا وارد رأی‌گیری شو.</p><input id="myline" placeholder="تحلیل یا اتهامت را بنویس..."><button class="btn secondary" onclick="sendMyLine()">ارسال صحبت</button><button class="btn" onclick="accusePhase()">رفتن به اتهام و رأی‌گیری</button>')}
+function sendMyLine(){let t=$('myline').value.trim();if(!t)return;log('شما',t);botTalk(2);dayDiscussion()}
+function accusePhase(){game.phase='اتهام';panel('⚖️ انتخاب مظنون','<p>به بازیکنی رأی بده که رفتارش مشکوک‌تر بوده است. بات‌ها نیز بر اساس سرنخ‌ها رأی می‌دهند.</p>'+voteButtons())}
+function voteButtons(candidates=alive().filter(p=>!p.you)){return candidates.map(p=>'<button class="option" onclick="castVote(\''+p.name+'\')">🗳 رأی به '+p.name+'</button>').join('')}
+function castVote(name){game.votes={};const candidates=alive().filter(p=>!p.you);candidates.forEach((p,i)=>{let pool=alive().filter(x=>!x.you&&x.name!==p.name);let target=pool[Math.floor(Math.random()*Math.max(1,pool.length))];if(target)game.votes[target.name]=(game.votes[target.name]||0)+1});game.votes[name]=(game.votes[name]||0)+1;const sorted=Object.entries(game.votes).sort((a,b)=>b[1]-a[1]);const top=sorted[0]?.[1]||0;const tied=sorted.filter(x=>x[1]===top).map(x=>x[0]);if(tied.length>1){game.runoff=tied;panel('⚖️ دفاعیه','<p>چند بازیکن رأی مساوی آورده‌اند. آن‌ها فرصت دفاع دارند؛ سپس رأی نهایی انجام می‌شود.</p>'+tied.map(n=>'<div class="tile"><b>'+n+'</b> فرصت دفاعیه</div>').join('')+tied.map(n=>'<button class="option" onclick="runoffVote(\''+n+'\')">رأی نهایی به '+n+'</button>').join('')+'<button class="btn secondary" onclick="startNight()">تساوی؛ رفتن به شب</button>');return}eliminate(sorted[0][0])}
+function runoffVote(name){eliminate(name)}
+function eliminate(name){const p=game.players.find(x=>x.name===name);if(p)p.alive=false;sayNarrator(name+' با رأی شهر از بازی خارج شد. نقش: '+(p?.role||'نامشخص'));game.history.push({round:game.round,eliminated:name,role:p?.role});checkWin();if(game)panel('📣 نتیجه رأی‌گیری','<p>'+name+' از بازی خارج شد.</p><p>نقش او: <b class="gold">'+p.role+'</b></p>'+playersHTML()+'<button class="btn" onclick="startNight()">شروع شب بعد</button>')}
+function checkWin(){if(!game)return;const mafia=alive().filter(p=>p.role==='مافیا').length,city=alive().length-mafia;if(mafia===0){finish('شهروندان برنده شدند!')}else if(mafia>=city){finish('مافیا برنده شد!')}}
+function finish(result){const rec=JSON.parse(localStorage.matchHistory||'[]');rec.unshift({result,round:game.round,role:meRole,date:new Date().toLocaleDateString('fa-IR')});localStorage.matchHistory=JSON.stringify(rec.slice(0,20));panel('🏆 پایان مسابقه','<h2>'+result+'</h2><p>نقش شما: '+meRole+' | تعداد شب‌ها: '+game.round+'</p>'+game.players.map(p=>'<div class="tile">'+p.name+' — '+p.role+'</div>').join('')+'<button class="btn" onclick="beginMatch()">بازی دوباره</button><button class="btn secondary" onclick="leaveGame()">بازگشت به خانه</button>');game=null}
+function renderHistory(){let h=JSON.parse(localStorage.matchHistory||'[]');$('history').innerHTML=h.length?h.map(x=>'<div class="tile">'+x.date+' — '+x.result+'<br><span class="muted">نقش: '+x.role+' | شب: '+x.round+'</span></div>').join(''):'<p>هنوز مسابقه‌ای ثبت نشده است.</p>'}
+function leaveGame(){game=null;goHome()}
+goHome();
 </script></body></html>
