@@ -68,7 +68,7 @@ button{font:inherit;cursor:pointer}.app{max-width:520px;min-height:100dvh;margin
 <script>
 const names=['آرمان','رها','سامان','نیلوفر','کامران','هستی','بردیا','ترانه','فرهاد'];const traits=['آروم و منطقی','شکاک و تند','شوخ‌طبع','کم‌حرف و مرموز','تحلیل‌گر'];let ppl=[],round=0,userRole='';
 const $=id=>document.getElementById(id);
-function showScreen(id){$('lobby').classList.toggle('hide',id!=='lobby');document.querySelectorAll('.screen').forEach(x=>x.classList.remove('show'));if(id!=='lobby')$(id).classList.add('show')}
+function showScreen(id){$('lobby').classList.toggle('hide',id!=='lobby');$('waiting').classList.toggle('hide',id!=='waiting');document.querySelectorAll('.screen').forEach(x=>x.classList.remove('show'));if(id!=='lobby'&&id!=='waiting')$(id).classList.add('show')}
 function navTo(id,el){document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));el.classList.add('active');showScreen(id)}
 function backLobby(){showScreen('lobby');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));document.querySelector('.nav').classList.add('active')}
 function startGame(){let roles=['مافیا','مافیا','مافیا','دکتر','کارآگاه','شهروند','شهروند','شهروند','شهروند','شهروند'];roles.sort(()=>Math.random()-.5);userRole=roles.pop();ppl=names.map((n,i)=>({name:n,role:roles[i],trait:traits[i%traits.length],alive:true}));round=1;showScreen('game');$('phase').textContent='شب اول';$('heading').textContent='نقش شما: '+userRole;$('hint').textContent='۱۰ نفر در بازی هستند؛ ۳ مافیا و ۷ شهروند. برای شروع مرحله شب ادامه بده.';$('chat').innerHTML='<p><b class="gold">راوی:</b> به تهران خوش آمدی. شب آخر آغاز شده است.</p>';render();night()}
