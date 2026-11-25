@@ -368,5 +368,12 @@ async function openSellerReviews(id,listingId){
 async function submitSellerReview(e,id,listingId){e.preventDefault();try{await apiCall("/api/v1/reviews",{method:"POST",body:JSON.stringify({seller_id:id,listing_id:listingId,rating:Number(document.getElementById("sellerReviewRating").value),comment:document.getElementById("sellerReviewComment").value.trim()})});toast("نظر شما ثبت شد");openSellerReviews(id,listingId)}catch(err){toast(err.message)}}
 async function showMyNotifications(){
  if(!yaftaToken){showAuth("login");return}
- try{let d=await apiCall("/api/v1/users/me/notifications");let rows=(d.items||[]).map(x=>'<div class="notification-row"><b>'+esc(x.title)+'</b><p>'+esc(x.body)+'</p><small>'+esc(x.created_at)+'</small></div>').join("");showSheet('<div class="sheet-head"><h3>اعلان‌های من</h3><button class="close" onclick="closeSheet()">×</button></div>'+(rows||'<div class="empty">اعلانی نداری.</div>'))}catch(e){toast(e.message)}
+ try{
+  let d=await apiCall("/api/v1/users/me/notifications");
+  let rows=(d.items||[]).map(x=>'<button class="notification-row" style="width:100%;text-align:right;background:transparent;border:0;color:inherit" onclick="markNotificationRead('+x.id+')"><b>'+esc(x.title)+'</b><p>'+esc(x.body)+'</p><small>'+esc(x.created_at)+(x.read_at?' · خوانده‌شده':' · برای علامت‌گذاری لمس کن')+'</small></button>').join("");
+  showSheet('<div class="sheet-head"><h3>اعلان‌های من</h3><button class="close" onclick="closeSheet()">×</button></div>'+(rows||'<div class="empty">اعلانی نداری.</div>'))
+ }catch(e){toast(e.message)}
+}
+async function markNotificationRead(id){
+ try{await apiCall("/api/v1/users/me/notifications/"+id+"/read",{method:"PATCH"});showMyNotifications()}catch(e){toast(e.message)}
 }
