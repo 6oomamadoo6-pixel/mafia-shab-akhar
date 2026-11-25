@@ -12,7 +12,7 @@ try{
 let params=new URLSearchParams({limit:"60"});let url=YAFTA_API_BASE+"/api/v1/listings";
 if(favMode){if(!yaftaToken){showAuth("login");return}url=YAFTA_API_BASE+"/api/v1/favorites"}
 else{let q=document.getElementById("search").value.trim();if(q)params.set("q",q);if(category!=="همه")params.set("category",categoryToApi(category));if(selectedCity)params.set("city",selectedCity);url+="?"+params.toString()}
-box.innerHTML='<div class="loading-state"><span class="loading-spinner"></span>در حال دریافت آگهی‌ها...</div>';
+if(!pullRefreshing)box.innerHTML='<div class="loading-state"><span class="loading-spinner"></span>در حال دریافت آگهی‌ها...</div>';
 let response=await fetch(url,{headers:yaftaToken?{Authorization:"Bearer "+yaftaToken}:{}});let data=await response.json();
 if(requestId!==listingRequestId)return;
 if(!response.ok)throw new Error(data.detail||"دریافت آگهی‌ها ناموفق بود");
@@ -192,7 +192,7 @@ showSheet(`<div class="sheet-head"><button class="close" onclick="closeSheet()">
 async function toggleFavFromDetail(id){await toggleFav(id);openDetail(id)}
 function reportListing(id){if(!yaftaToken){showAuth("login");return}showSheet('<div class="sheet-head"><h3>گزارش آگهی</h3><button class="close" onclick="closeSheet()">×</button></div><form onsubmit="submitReport(event,'+id+')"><div class="field"><label>دلیل گزارش</label><select id="reportReason"><option>آگهی غیرواقعی یا کلاهبرداری</option><option>اطلاعات نادرست</option><option>کالای ممنوعه</option><option>محتوای نامناسب</option><option>قیمت یا دسته‌بندی اشتباه</option><option>سایر</option></select></div><div class="field"><label>توضیحات (اختیاری)</label><textarea id="reportDetails" maxlength="2000" placeholder="جزئیات را بنویس..."></textarea></div><button class="primary" type="submit">ارسال گزارش</button></form>')}
 async function submitReport(e,id){e.preventDefault();try{await apiCall("/api/v1/reports",{method:"POST",body:JSON.stringify({listing_id:id,reason:document.getElementById("reportReason").value,details:document.getElementById("reportDetails").value})});closeSheet();toast("گزارش برای بررسی ارسال شد")}catch(e){toast(e.message)}}
-async function openChats(btn){if(chatRefreshTimer){clearInterval(chatRefreshTimer);chatRefreshTimer=null}if(btn)setNav(btn);if(!yaftaToken){showAuth("login");return}try{let data=await apiCall("/api/v1/chats");let rows=(data.items||[]).map(c=>'<button class="chat-row" onclick="openChat('+c.id+')"><span class="chat-avatar">💬</span><span style="flex:1"><b>'+esc(c.title)+'</b><small>'+esc(c.last_message||"گفت‌وگو را شروع کنید")+'</small></span><small>'+esc(c.other_name||"")+'</small></button>').join("");showSheet('<div class="sheet-head"><button class="close" onclick="closeSheet()">×</button><h3>پیام‌های من</h3><span style="width:38px"></span></div><div class="chat-list">'+(rows||'<div class="empty">هنوز گفت‌وگویی نداری.</div>')+'</div>')}catch(e){toast(e.message)}}
+async function openChats(btn){if(chatRefreshTimer){clearInterval(chatRefreshTimer);chatRefreshTimer=null}if(btn)setNav(btn);if(!yaftaToken){showAuth("login");return}try{let data=await apiCall("/api/v1/chats");let rows=(data.items||[]).map(c=>'<button class="chat-row" onclick="openChat('+c.id+')"><span class="chat-avatar">▤</span><span style="flex:1"><b>'+esc(c.title)+'</b><small>'+esc(c.last_message||"گفت‌وگو را شروع کنید")+'</small></span><small>'+esc(c.other_name||"")+'</small></button>').join("");showSheet('<div class="sheet-head"><button class="close" onclick="closeSheet()">×</button><h3>پیام‌های من</h3><span style="width:38px"></span></div><div class="chat-list">'+(rows||'<div class="empty">هنوز گفت‌وگویی نداری.</div>')+'</div>')}catch(e){toast(e.message)}}
 async function startChat(id){if(!yaftaToken){showAuth("login");return}try{let data=await apiCall("/api/v1/chats",{method:"POST",body:JSON.stringify({listing_id:id})});openChat(data.chat_id)}catch(e){toast(e.message)}}
 async function openChat(id){if(!yaftaToken){showAuth("login");return}activeChatId=String(id);try{let data=await apiCall("/api/v1/chats/"+id+"/messages");let messages=(data.items||[]).map(m=>'<div class="bubble '+(m.mine?'mine':'theirs')+'">'+esc(m.body)+'<time>'+esc(m.created_at||"")+'</time></div>').join("");showSheet('<div class="sheet-head"><button class="close" onclick="openChats()">‹</button><h3>گفت‌وگو</h3><span style="font-size:10px;color:#8495a4">به‌روزرسانی خودکار</span></div><div class="chat-screen"><div class="chat-messages" id="chatMessages">'+messages+'</div><form class="chat-compose" onsubmit="sendChat(event)"><input id="chatInput" maxlength="3000" placeholder="پیامت را بنویس..." autocomplete="off"><button type="submit" aria-label="ارسال">➤</button></form></div>');let box=document.getElementById("chatMessages");box.scrollTop=box.scrollHeight;chatRefreshTimer=setInterval(refreshChatMessages,5000)}catch(e){toast(e.message)}}
 async function refreshChatMessages(){if(!activeChatId)return;try{let box=document.getElementById("chatMessages");if(!box)return;let nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<70;let data=await apiCall("/api/v1/chats/"+activeChatId+"/messages");box.innerHTML=(data.items||[]).map(m=>'<div class="bubble '+(m.mine?'mine':'theirs')+'">'+esc(m.body)+'<time>'+esc(m.created_at||"")+'</time></div>').join("");if(nearBottom)box.scrollTop=box.scrollHeight}catch(e){console.log("Chat refresh failed",e)}}
@@ -206,3 +206,54 @@ function selectCity(city,province){document.getElementById("cityName").textConte
 let toastTimer=null;function toast(t){let el=document.getElementById("toast");if(!el)return;clearTimeout(toastTimer);el.textContent=t;el.classList.add("toast-visible");el.style.display="block";toastTimer=setTimeout(function(){el.classList.remove("toast-visible");el.style.display="none"},3600)}
 window.handleAndroidBack=function(){var overlay=document.getElementById("overlay");if(overlay&&overlay.classList.contains("show")){closeSheet();return true;}return false;};
 loadOnlineAds();
+
+(function(){
+ const indicator=document.getElementById("pullIndicator");
+ const label=document.getElementById("pullIndicatorText");
+ if(!indicator||!label)return;
+ let startY=0,startX=0,pullDistance=0,tracking=false,refreshing=false;
+ function reset(){
+  indicator.classList.remove("visible","ready","refreshing");
+  indicator.style.transform="translate(-50%,-68px)";
+  label.textContent="برای تازه‌سازی پایین بکش";
+  pullDistance=0;tracking=false;
+ }
+ document.addEventListener("touchstart",function(e){
+  if(refreshing||e.touches.length!==1||window.scrollY>1)return;
+  const overlay=document.getElementById("overlay");
+  if(overlay&&overlay.classList.contains("show"))return;
+  startY=e.touches[0].clientY;startX=e.touches[0].clientX;
+  pullDistance=0;tracking=startY<150;
+ },{passive:true});
+ document.addEventListener("touchmove",function(e){
+  if(!tracking||refreshing||e.touches.length!==1)return;
+  const dy=e.touches[0].clientY-startY;
+  const dx=e.touches[0].clientX-startX;
+  if(dy<=0||window.scrollY>1){reset();return;}
+  if(Math.abs(dx)>Math.abs(dy)*.8)return;
+  if(e.cancelable)e.preventDefault();
+  pullDistance=Math.min(116,dy*.62);
+  indicator.classList.add("visible");
+  indicator.style.transform="translate(-50%,"+(pullDistance-58)+"px)";
+  const ready=pullDistance>=72;
+  indicator.classList.toggle("ready",ready);
+  label.textContent=ready?"رها کن تا تازه‌سازی شود":"برای تازه‌سازی پایین بکش";
+ },{passive:false});
+ document.addEventListener("touchend",async function(){
+  if(!tracking)return;
+  const shouldRefresh=pullDistance>=72;
+  if(!shouldRefresh){reset();return;}
+  refreshing=true;tracking=false;
+  indicator.classList.add("visible","refreshing");
+  indicator.classList.remove("ready");
+  indicator.style.transform="translate(-50%,10px)";
+  label.textContent="در حال تازه‌سازی...";
+  pullRefreshing=true;
+  try{await loadOnlineAds();label.textContent="به‌روز شد"}
+  finally{
+   pullRefreshing=false;
+   setTimeout(function(){refreshing=false;reset()},550);
+  }
+ },{passive:true});
+ document.addEventListener("touchcancel",reset,{passive:true});
+})();
