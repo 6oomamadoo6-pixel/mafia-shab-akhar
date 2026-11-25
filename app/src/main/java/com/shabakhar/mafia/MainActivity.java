@@ -34,18 +34,16 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(0xFFF3F6FA);
-        getWindow().setNavigationBarColor(0xFFF3F6FA);
-        getWindow().getDecorView().setSystemUiVisibility(
-            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-        );
+        getWindow().setStatusBarColor(0xFF101923);
+        getWindow().setNavigationBarColor(0xFF101923);
+        hideStatusBar();
 
         FrameLayout root = new FrameLayout(this);
         webView = new WebView(this);
         assetLoader = new WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
             .build();
-        webView.setBackgroundColor(0xFFF3F6FA);
+        webView.setBackgroundColor(0xFF101923);
         webView.setVisibility(View.INVISIBLE);
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         webView.setVerticalScrollBarEnabled(false);
@@ -122,7 +120,7 @@ public class MainActivity extends Activity {
         root.addView(pageProgress, progressParams);
 
         FrameLayout splash = new FrameLayout(this);
-        splash.setBackgroundColor(0xFFF3F6FA);
+        splash.setBackgroundColor(0xFF101923);
         LinearLayout splashContent = new LinearLayout(this);
         splashContent.setOrientation(LinearLayout.VERTICAL);
         splashContent.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -130,12 +128,12 @@ public class MainActivity extends Activity {
         TextView logo = new TextView(this);
         logo.setText("ی");
         logo.setTextColor(0xFFFFFFFF);
-        logo.setTextSize(42);
+        logo.setTextSize(48);
         logo.setGravity(Gravity.CENTER);
-        logo.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        logo.setTypeface(android.graphics.Typeface.create("sans-serif-rounded", android.graphics.Typeface.BOLD));
         GradientDrawable logoBackground = new GradientDrawable(
             GradientDrawable.Orientation.TL_BR,
-            new int[] { 0xFF2789C5, 0xFF12568F }
+            new int[] { 0xFF36A6E8, 0xFF155B9B }
         );
         logoBackground.setCornerRadius(dp(28));
         logo.setBackground(logoBackground);
@@ -145,14 +143,14 @@ public class MainActivity extends Activity {
 
         TextView appName = new TextView(this);
         appName.setText("یافتا");
-        appName.setTextColor(0xFF173B58);
-        appName.setTextSize(27);
-        appName.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        appName.setTextColor(0xFFF0F6FC);
+        appName.setTextSize(30);
+        appName.setTypeface(android.graphics.Typeface.create("sans-serif-rounded", android.graphics.Typeface.BOLD));
         splashContent.addView(appName);
 
         TextView tagline = new TextView(this);
         tagline.setText("بازار تازه‌ی خرید و فروش");
-        tagline.setTextColor(0xFF7A8FA2);
+        tagline.setTextColor(0xFF9BAFC0);
         tagline.setTextSize(12);
         LinearLayout.LayoutParams taglineParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
@@ -211,6 +209,19 @@ public class MainActivity extends Activity {
 
         setContentView(root);
         webView.loadUrl("https://appassets.androidplatform.net/assets/index.html");
+    }
+
+    private void hideStatusBar() {
+        getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        );
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) hideStatusBar();
     }
 
     private int dp(int value) {
