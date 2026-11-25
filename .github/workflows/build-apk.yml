@@ -81,6 +81,7 @@ jobs:
           test -n "$APKSIGNER"
           "$APKSIGNER" verify --print-certs app/build/outputs/apk/debug/app-debug.apk > app/build/outputs/apk/debug/signing-fingerprint.txt
           cat app/build/outputs/apk/debug/signing-fingerprint.txt
+          grep -q "SHA-256 digest: 50e5e8f3cd5fa9e80e9174aa2f6ef3fb6acd1ae9afd24476be17ce9c0cfd6038" app/build/outputs/apk/debug/signing-fingerprint.txt || { echo "ERROR: YAFTA signing key changed; refusing to publish an incompatible update."; exit 1; }
       - name: Save stable Android signing key
         uses: actions/cache/save@v4
         with:
