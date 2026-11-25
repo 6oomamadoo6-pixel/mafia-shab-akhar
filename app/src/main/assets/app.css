@@ -92,3 +92,5 @@ body{background:#f3f6fa;color:var(--ink);font-family:Tahoma,"Segoe UI",sans-seri
 .gallery-thumbs button{padding:2px;border:2px solid transparent;background:transparent;border-radius:11px;flex:none}
 .gallery-thumbs button.active{border-color:#1769aa}
 .gallery-thumbs img{width:58px;height:58px;object-fit:cover;border-radius:8px;display:block}
+
+.offline-banner{margin:0 16px 12px;padding:10px 12px;border-radius:11px;background:#fff4df;color:#93621d;font-size:10px;text-align:center;border:1px solid #f3dfb9}
