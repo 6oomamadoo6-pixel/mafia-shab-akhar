@@ -15,6 +15,18 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+      - name: Validate embedded app JavaScript
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('app/src/main/assets/index.html', 'utf8');
+          const scripts = [...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)];
+          const inline = scripts.map(match => match[1]).filter(source => source.trim());
+          if (!inline.length) throw new Error('No inline application script found');
+          inline.forEach((source, index) => new Function(source));
+          if (!html.includes('.overlay{display:flex}')) throw new Error('Modal visibility rule is missing');
+          console.log('Embedded JavaScript syntax and modal visibility checks passed.');
+          NODE
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon
       - name: Upload APK
