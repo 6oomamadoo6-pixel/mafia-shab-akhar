@@ -120,8 +120,60 @@ function formatAdPrice(input){let digits=input.value.replace(/[^0-9۰-۹٠-٩]/g
 function openAdProvincePicker(){captureAdWizardData();if(!window.YAFTA_PROVINCES){toast("فهرست استان‌ها بارگذاری نشد");return}let rows=window.YAFTA_PROVINCES.map(p=>'<button class="location-row" onclick="listingProvince='+JSON.stringify(p.name).replace(/"/g,"&quot;")+';listingCity=\'\';renderAdWizard()">'+esc(p.name)+'　›</button>').join("");showSheet('<div class="sheet-head"><h3>انتخاب استان</h3><button class="close" onclick="renderAdWizard()">×</button></div><div class="location-list">'+rows+'</div>')}
 function openAdCityPicker(){captureAdWizardData();let p=window.YAFTA_PROVINCES?.find(x=>x.name===listingProvince);if(!p)return;let cities=window.YAFTA_CITIES.filter(c=>c.province_id===p.id).sort((a,b)=>a.name.localeCompare(b.name,"fa"));let rows=cities.map(c=>'<button class="location-row" onclick="listingCity='+JSON.stringify(c.name).replace(/"/g,"&quot;")+';renderAdWizard()">'+esc(c.name)+'</button>').join("");showSheet('<div class="sheet-head"><h3>انتخاب شهر '+esc(listingProvince)+'</h3><button class="close" onclick="renderAdWizard()">×</button></div><div class="location-list">'+rows+'</div>')}
 let pendingPhotos=[];let pendingPhotoFiles=[];
-function previewPhotos(input){pendingPhotos=[];pendingPhotoFiles=[...input.files].slice(0,5);let out=document.getElementById("photoPreview");out.innerHTML="";pendingPhotoFiles.forEach(file=>{let reader=new FileReader();reader.onload=e=>{pendingPhotos.push(e.target.result);let img=document.createElement("img");img.src=e.target.result;out.appendChild(img)};reader.readAsDataURL(file)})}
-async function uploadPendingPhotos(){if(!pendingPhotoFiles.length)return[];let signed=await apiCall("/api/v1/uploads/signature",{method:"POST",body:"{}"});let urls=[];for(const file of pendingPhotoFiles){if(file.size>8*1024*1024)throw new Error("حجم هر عکس باید کمتر از ۸ مگابایت باشد.");let form=new FormData();form.append("file",file);form.append("api_key",signed.api_key);form.append("timestamp",String(signed.timestamp));form.append("folder",signed.folder);form.append("signature",signed.signature);let r=await fetch("https://api.cloudinary.com/v1_1/"+signed.cloud_name+"/image/upload",{method:"POST",body:form});let d=await r.json();if(!r.ok)throw new Error("بارگذاری عکس ناموفق بود؛ تنظیمات فضای عکس را بررسی کن.");urls.push(d.secure_url)}return urls}
+function previewPhotos(input){
+ const selected=[...(input.files||[])];
+ if(selected.length>5)toast("حداکثر ۵ عکس می‌توانی انتخاب کنی.");
+ pendingPhotoFiles=selected.slice(0,5);pendingPhotos=[];
+ const out=document.getElementById("photoPreview");if(!out)return;out.innerHTML="";
+ pendingPhotoFiles.forEach(file=>{
+  if(!file.type||!file.type.startsWith("image/")){toast("فقط فایل تصویری انتخاب کن.");return}
+  const reader=new FileReader();
+  reader.onload=e=>{pendingPhotos.push(e.target.result);const img=document.createElement("img");img.src=e.target.result;img.alt="پیش‌نمایش عکس آگهی";out.appendChild(img)};
+  reader.onerror=()=>toast("خواندن یکی از عکس‌ها ناموفق بود.");
+  reader.readAsDataURL(file);
+ });
+}
+function optimizeListingPhoto(file){
+ return new Promise((resolve,reject)=>{
+  if(!file.type||!file.type.startsWith("image/")){reject(new Error("یکی از فایل‌های انتخاب‌شده عکس معتبر نیست."));return}
+  if(file.type==="image/gif"||file.type==="image/svg+xml"){resolve(file);return}
+  const url=URL.createObjectURL(file),img=new Image();
+  img.onload=()=>{
+   try{
+    const max=2000,scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+    if(scale===1&&file.size<=2.5*1024*1024){URL.revokeObjectURL(url);resolve(file);return}
+    const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+    const ctx=canvas.getContext("2d");if(!ctx)throw new Error("پردازش عکس در این دستگاه در دسترس نیست.");
+    ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);
+    canvas.toBlob(blob=>{URL.revokeObjectURL(url);if(!blob){resolve(file);return}resolve(new File([blob],(file.name||"listing-photo").replace(/\.[^.]+$/,"")+".jpg",{type:"image/jpeg",lastModified:Date.now()}))},"image/jpeg",.84);
+   }catch(error){URL.revokeObjectURL(url);reject(error)}
+  };
+  img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("باز کردن یکی از عکس‌ها ممکن نشد."))};
+  img.src=url;
+ });
+}
+async function uploadPendingPhotos(){
+ if(!pendingPhotoFiles.length)return[];
+ const signed=await apiCall("/api/v1/uploads/signature",{method:"POST",body:"{}"});
+ if(!signed.cloud_name||!signed.api_key||!signed.timestamp||!signed.signature)throw new Error("اطلاعات اتصال فضای عکس از سرور کامل دریافت نشد.");
+ const urls=[];
+ for(let index=0;index<pendingPhotoFiles.length;index++){
+  const original=pendingPhotoFiles[index];
+  const file=await optimizeListingPhoto(original);
+  if(file.size>8*1024*1024)throw new Error("حجم عکس «"+original.name+"» حتی پس از بهینه‌سازی بیشتر از ۸ مگابایت است.");
+  const form=new FormData();form.append("file",file,file.name);form.append("api_key",signed.api_key);form.append("timestamp",String(signed.timestamp));form.append("folder",signed.folder);form.append("signature",signed.signature);
+  let response;
+  try{response=await fetch("https://api.cloudinary.com/v1_1/"+encodeURIComponent(signed.cloud_name)+"/image/upload",{method:"POST",body:form})}
+  catch(error){throw new Error("ارتباط با فضای ذخیره‌سازی عکس برقرار نشد؛ اینترنت یا دسترسی شبکه را بررسی کن.")}
+  let data={};try{data=await response.json()}catch(parseError){}
+  if(!response.ok||!data.secure_url){
+   const reason=data&&data.error&&data.error.message?data.error.message:(data.message||"پاسخ معتبر از سرویس عکس دریافت نشد.");
+   throw new Error("بارگذاری عکس "+(index+1)+" ناموفق بود: "+reason+" (کد "+response.status+")");
+  }
+  urls.push(data.secure_url);
+ }
+ return urls;
+}
 async function submitAd(e){e.preventDefault();if(!yaftaToken){showAuth("login");return}captureAdWizardData();let spec=Object.assign({},adWizardData.spec);if(adWizardSubcategory)spec["زیر‌دسته"]=adWizardSubcategory;let raw=(adWizardData.price||"").replace(/[٬,\\s]/g,"").replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));let numeric=adPriceMode==="fixed"?Number(raw.replace(/[^0-9]/g,"")):null;let priceType=adPriceMode==="free"?"free":adPriceMode==="negotiable"?"negotiable":"fixed";try{let payload={title:adWizardData.title.trim(),description:adWizardData.description.trim(),category:categoryToApi(adWizardCategory),price:numeric,price_type:priceType,province:listingProvince,city:listingCity,address_text:adWizardData.neighborhood,condition:adWizardData.condition,extra_fields:spec,contact_phone:adWizardData.phone||null,image_urls:await uploadPendingPhotos()};let d=await apiCall("/api/v1/listings",{method:"POST",body:JSON.stringify(payload)});category="همه";favMode=false;pendingPhotos=[];pendingPhotoFiles=[];await loadOnlineAds();closeSheet();toast("آگهی با موفقیت ثبت و منتشر شد")}catch(error){toast(error.message)}}
 let activeChatId=null;
 let chats=JSON.parse(localStorage.getItem("yaftaChats")||"{}");
@@ -151,6 +203,6 @@ function showProvinceList(){let current=document.getElementById("cityName").text
 function showCityList(provinceId){let province=window.YAFTA_PROVINCES.find(p=>p.id===provinceId);if(!province)return;let cities=window.YAFTA_CITIES.filter(c=>c.province_id===provinceId).sort((a,b)=>a.name.localeCompare(b.name,"fa"));let rows=cities.map(c=>'<button class="location-row" onclick="selectCityById('+c.id+')"><span>'+esc(c.name)+'</span><b>‹</b></button>').join("");showSheet('<div class="sheet-head"><button class="close" onclick="showProvinceList()">‹</button><h3>شهرهای '+esc(province.name)+'</h3><button class="close" onclick="closeSheet()">×</button></div><div class="location-list">'+(rows||'<div class="empty">شهری برای این استان ثبت نشده است.</div>')+'</div>')}
 function selectCityById(cityId){let city=window.YAFTA_CITIES.find(c=>c.id===cityId);if(!city)return;let province=window.YAFTA_PROVINCES.find(p=>p.id===city.province_id);selectCity(city.name,province?province.name:"")}
 function selectCity(city,province){document.getElementById("cityName").textContent=city;selectedCity=city;localStorage.setItem("yaftaCity",city);localStorage.setItem("yaftaProvince",province);closeSheet();loadOnlineAds();toast("شهر "+city+" انتخاب شد")}
-function toast(t){let el=document.getElementById("toast");el.textContent=t;el.style.display="block";setTimeout(function(){el.style.display="none"},2200)}
+let toastTimer=null;function toast(t){let el=document.getElementById("toast");if(!el)return;clearTimeout(toastTimer);el.textContent=t;el.classList.add("toast-visible");el.style.display="block";toastTimer=setTimeout(function(){el.classList.remove("toast-visible");el.style.display="none"},3600)}
 window.handleAndroidBack=function(){var overlay=document.getElementById("overlay");if(overlay&&overlay.classList.contains("show")){closeSheet();return true;}return false;};
 loadOnlineAds();
