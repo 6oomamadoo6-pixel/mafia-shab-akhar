@@ -152,15 +152,21 @@ public class MainActivity extends Activity {
         appName.setText("یافتا");
         appName.setTextColor(splashInk);
         appName.setTextSize(30);
+        appName.setGravity(Gravity.CENTER);
+        appName.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         appName.setTypeface(android.graphics.Typeface.create("sans-serif-rounded", android.graphics.Typeface.BOLD));
-        splashContent.addView(appName);
+        splashContent.addView(appName, new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
 
         TextView tagline = new TextView(this);
         tagline.setText("بازار تازه‌ی خرید و فروش");
         tagline.setTextColor(splashMuted);
         tagline.setTextSize(12);
+        tagline.setGravity(Gravity.CENTER);
+        tagline.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         LinearLayout.LayoutParams taglineParams = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         );
         taglineParams.topMargin = dp(7);
         taglineParams.bottomMargin = dp(25);
