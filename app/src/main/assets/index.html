@@ -196,5 +196,6 @@ function showCityList(provinceId){let province=window.YAFTA_PROVINCES.find(p=>p.
 function selectCityById(cityId){let city=window.YAFTA_CITIES.find(c=>c.id===cityId);if(!city)return;let province=window.YAFTA_PROVINCES.find(p=>p.id===city.province_id);selectCity(city.name,province?province.name:"")}
 function selectCity(city,province){document.getElementById("cityName").textContent=city;localStorage.setItem("yaftaCity",city);localStorage.setItem("yaftaProvince",province);closeSheet();toast("شهر "+city+" انتخاب شد")}
 function toast(t){let el=document.getElementById("toast");el.textContent=t;el.style.display="block";setTimeout(function(){el.style.display="none"},2200)}
+window.handleAndroidBack=function(){var overlay=document.getElementById("overlay");if(overlay&&overlay.classList.contains("show")){closeSheet();return true;}return false;};
 loadOnlineAds();
 </script></body></html>
