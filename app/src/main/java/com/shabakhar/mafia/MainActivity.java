@@ -7,6 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Gravity;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.webkit.ConsoleMessage;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -31,6 +34,7 @@ public class MainActivity extends Activity {
         getWindow().setNavigationBarColor(0xFFF3F6FA);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
 
+        FrameLayout root = new FrameLayout(this);
         webView = new WebView(this);
         webView.setBackgroundColor(0xFFF3F6FA);
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -76,7 +80,24 @@ public class MainActivity extends Activity {
             }
         });
 
+        ProgressBar pageProgress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        pageProgress.setMax(100);
+        pageProgress.setProgressTintList(android.content.res.ColorStateList.valueOf(0xFF1769AA));
+        FrameLayout.LayoutParams progressParams = new FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT, (int) (3 * getResources().getDisplayMetrics().density), Gravity.TOP
+        );
+        root.addView(webView, new FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+        ));
+        root.addView(pageProgress, progressParams);
+
         webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                pageProgress.setProgress(newProgress);
+                pageProgress.setVisibility(newProgress >= 100 ? View.GONE : View.VISIBLE);
+            }
+
             @Override
             public boolean onShowFileChooser(
                 WebView view,
@@ -104,7 +125,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        setContentView(webView);
+        setContentView(root);
         webView.loadUrl("file:///android_asset/index.html");
     }
 
