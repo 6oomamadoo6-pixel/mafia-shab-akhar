@@ -11,6 +11,7 @@ async function loadOnlineAds(){
 let box=document.getElementById("ads");let requestId=++listingRequestId;
 try{
 let params=new URLSearchParams({limit:"60"});let url=YAFTA_API_BASE+"/api/v1/listings";
+if(yaftaAdvancedFilters){Object.entries(yaftaAdvancedFilters).forEach(([k,v])=>{if(v!==""&&v!==null&&v!==undefined)params.set(k,String(v))})}
 if(favMode){if(!yaftaToken){showAuth("login");return}url=YAFTA_API_BASE+"/api/v1/favorites"}
 else{let q=document.getElementById("search").value.trim();if(q)params.set("q",q);if(category!=="همه")params.set("category",categoryToApi(category));if(selectedCity)params.set("city",selectedCity);url+="?"+params.toString()}
 if(!pullRefreshing)box.innerHTML='<div class="loading-state"><span class="loading-spinner"></span>در حال دریافت آگهی‌ها...</div>';
@@ -303,3 +304,38 @@ function bindPhotoViewer(v){
  stage.addEventListener("click",e=>{if(e.target.closest("button"))return;const now=Date.now();if(now-lastTap<320&&yaftaPhotoViewerState){yaftaPhotoViewerState.scale=yaftaPhotoViewerState.scale>1?1:2.5;yaftaPhotoViewerState.x=0;yaftaPhotoViewerState.y=0;paintPhotoViewer()}lastTap=now});
 }
 document.addEventListener("keydown",e=>{if(!yaftaPhotoViewerState)return;if(e.key==="Escape")closePhotoViewer();if(e.key==="ArrowLeft")stepPhotoViewer(1);if(e.key==="ArrowRight")stepPhotoViewer(-1)});
+
+
+/* Advanced search controls */
+let yaftaAdvancedFilters={};
+function installAdvancedSearch(){
+ const filters=document.querySelector(".filters");
+ if(!filters||document.getElementById("advancedSearchButton"))return;
+ const button=document.createElement("button");
+ button.id="advancedSearchButton";button.className="chip";
+ button.textContent="فیلتر پیشرفته";
+ button.onclick=openAdvancedSearch;
+ filters.appendChild(button);
+}
+function openAdvancedSearch(){
+ const f=yaftaAdvancedFilters||{};
+ showSheet('<div class="sheet-head"><h3>جست‌وجوی پیشرفته</h3><button class="close" onclick="closeSheet()">×</button></div>'+
+ '<div class="field"><label>حداقل قیمت (تومان)</label><input id="advMin" type="number" inputmode="numeric" min="0" value="'+esc(f.min_price||'')+'" placeholder="بدون محدودیت"></div>'+
+ '<div class="field"><label>حداکثر قیمت (تومان)</label><input id="advMax" type="number" inputmode="numeric" min="0" value="'+esc(f.max_price||'')+'" placeholder="بدون محدودیت"></div>'+
+ '<div class="field"><label>استان</label><input id="advProvince" value="'+esc(f.province||'')+'" placeholder="مثلاً تهران"></div>'+
+ '<div class="field"><label>وضعیت کالا</label><select id="advCondition"><option value="">همه وضعیت‌ها</option><option value="نو">نو</option><option value="در حد نو">در حد نو</option><option value="کارکرده">کارکرده</option></select></div>'+
+ '<div class="field"><label>مرتب‌سازی</label><select id="advSort"><option value="newest">جدیدترین</option><option value="cheapest">ارزان‌ترین</option><option value="expensive">گران‌ترین</option></select></div>'+
+ '<div class="field"><label><input id="advImages" type="checkbox" style="width:auto"> فقط آگهی‌های عکس‌دار</label></div>'+
+ '<button class="primary" onclick="applyAdvancedSearch()">اعمال فیلترها</button><button class="chip" style="width:100%;margin-top:9px" onclick="clearAdvancedSearch()">پاک‌کردن فیلترها</button>');
+ document.getElementById("advCondition").value=f.condition||"";
+ document.getElementById("advSort").value=f.sort||"newest";
+ document.getElementById("advImages").checked=f.has_images==="true"||f.has_images===true;
+}
+function applyAdvancedSearch(){
+ const min=document.getElementById("advMin").value.trim(),max=document.getElementById("advMax").value.trim();
+ if(min&&max&&Number(min)>Number(max)){toast("حداقل قیمت نمی‌تواند بیشتر از حداکثر باشد");return}
+ yaftaAdvancedFilters={min_price:min,max_price:max,province:document.getElementById("advProvince").value.trim(),condition:document.getElementById("advCondition").value,sort:document.getElementById("advSort").value,has_images:document.getElementById("advImages").checked?"true":""};
+ closeSheet();loadOnlineAds();toast("فیلترهای جست‌وجو اعمال شد");
+}
+function clearAdvancedSearch(){yaftaAdvancedFilters={};closeSheet();loadOnlineAds();toast("فیلترها پاک شدند")}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",installAdvancedSearch);else installAdvancedSearch();
