@@ -19,6 +19,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.JavascriptInterface;
+import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebViewClient;
 import android.webkit.WebResourceResponse;
 import androidx.webkit.WebViewAssetLoader;
@@ -34,8 +36,13 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(0xFF101923);
-        getWindow().setNavigationBarColor(0xFF101923);
+        boolean darkTheme = getSharedPreferences("yafta_prefs", MODE_PRIVATE).getString("theme_mode", "light").equals("dark");
+        int splashBg = darkTheme ? 0xFF151B20 : 0xFFF5F4F0;
+        int splashInk = darkTheme ? 0xFFE8EEF1 : 0xFF252B30;
+        int splashMuted = darkTheme ? 0xFF9EADB5 : 0xFF737B80;
+        getWindow().setStatusBarColor(splashBg);
+        getWindow().setNavigationBarColor(splashBg);
+        getWindow().getDecorView().setSystemUiVisibility(darkTheme ? 0 : View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
         hideStatusBar();
 
         FrameLayout root = new FrameLayout(this);
@@ -43,7 +50,7 @@ public class MainActivity extends Activity {
         assetLoader = new WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
             .build();
-        webView.setBackgroundColor(0xFF101923);
+        webView.setBackgroundColor(splashBg);
         webView.setVisibility(View.INVISIBLE);
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         webView.setVerticalScrollBarEnabled(false);
@@ -120,7 +127,7 @@ public class MainActivity extends Activity {
         root.addView(pageProgress, progressParams);
 
         FrameLayout splash = new FrameLayout(this);
-        splash.setBackgroundColor(0xFF101923);
+        splash.setBackgroundColor(splashBg);
         LinearLayout splashContent = new LinearLayout(this);
         splashContent.setOrientation(LinearLayout.VERTICAL);
         splashContent.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -135,7 +142,7 @@ public class MainActivity extends Activity {
             GradientDrawable.Orientation.TL_BR,
             new int[] { 0xFF36A6E8, 0xFF155B9B }
         );
-        logoBackground.setCornerRadius(dp(28));
+        logoBackground.setCornerRadius(dp(25));
         logo.setBackground(logoBackground);
         LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(dp(82), dp(82));
         logoParams.bottomMargin = dp(19);
@@ -143,14 +150,14 @@ public class MainActivity extends Activity {
 
         TextView appName = new TextView(this);
         appName.setText("یافتا");
-        appName.setTextColor(0xFFF0F6FC);
+        appName.setTextColor(splashInk);
         appName.setTextSize(30);
         appName.setTypeface(android.graphics.Typeface.create("sans-serif-rounded", android.graphics.Typeface.BOLD));
         splashContent.addView(appName);
 
         TextView tagline = new TextView(this);
         tagline.setText("بازار تازه‌ی خرید و فروش");
-        tagline.setTextColor(0xFF9BAFC0);
+        tagline.setTextColor(splashMuted);
         tagline.setTextSize(12);
         LinearLayout.LayoutParams taglineParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
@@ -162,7 +169,10 @@ public class MainActivity extends Activity {
         ProgressBar splashProgress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
         splashProgress.setIndeterminate(true);
         splashProgress.setIndeterminateTintList(android.content.res.ColorStateList.valueOf(0xFF2789C5));
-        splashContent.addView(splashProgress, new LinearLayout.LayoutParams(dp(118), dp(3)));
+        splashContent.addView(splashProgress, new LinearLayout.LayoutParams(dp(132), dp(3)));
+        splashContent.setAlpha(0f); splashContent.setScaleX(0.97f); splashContent.setScaleY(0.97f);
+        splashContent.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(520).setInterpolator(new DecelerateInterpolator()).start();
+        android.animation.ObjectAnimator pulse = android.animation.ObjectAnimator.ofFloat(logo, "translationY", dp(0), dp(-5), dp(0)); pulse.setDuration(1900); pulse.setRepeatCount(android.animation.ValueAnimator.INFINITE); pulse.start();
 
         FrameLayout.LayoutParams splashContentParams = new FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER
@@ -172,6 +182,13 @@ public class MainActivity extends Activity {
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
         ));
         splashView = splash;
+
+        webView.addJavascriptInterface(new Object() {
+            @JavascriptInterface public void setMode(String mode) {
+                if (!"dark".equals(mode) && !"light".equals(mode) && !"system".equals(mode)) return;
+                getSharedPreferences("yafta_prefs", MODE_PRIVATE).edit().putString("theme_mode", mode).apply();
+            }
+        }, "YAFTATheme");
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
