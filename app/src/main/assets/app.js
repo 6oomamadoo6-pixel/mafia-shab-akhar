@@ -191,7 +191,7 @@ function openDetail(id,photoIndex=0){
 let a=ads.find(x=>x.id===id);if(!a)return;
 let pics=a.photos&&a.photos.length?a.photos:[];
 let index=Math.max(0,Math.min(Number(photoIndex)||0,pics.length-1));
-let hero=pics.length?`<img src="${esc(pics[index])}" alt="تصویر آگهی">`:'<div class="detail-no-photo">▧<small>تصویری برای این آگهی ثبت نشده</small></div>';
+let hero=pics.length?`<img src="${esc(pics[index])}" alt="تصویر آگهی" onclick="openPhotoViewer(${id},${index})" role="button" aria-label="نمایش تمام‌صفحه و بزرگ‌نمایی عکس">`:'<div class="detail-no-photo">▧<small>تصویری برای این آگهی ثبت نشده</small></div>';
 let specs=Object.entries(a.spec||{}).map(x=>`<div class="detail-item"><small>${esc(x[0])}</small><b>${esc(x[1])}</b></div>`).join("");
 let thumbs=pics.length>1?`<div class="gallery-thumbs">${pics.map((src,i)=>`<button class="${i===index?'active':''}" onclick="openDetail(${id},${i})"><img src="${esc(src)}" alt="تصویر ${i+1}"></button>`).join("")}</div>`:"";
 let arrows=pics.length>1?`<button class="gallery-arrow prev" onclick="openDetail(${id},${(index-1+pics.length)%pics.length})" aria-label="تصویر قبلی">‹</button><button class="gallery-arrow next" onclick="openDetail(${id},${(index+1)%pics.length})" aria-label="تصویر بعدی">›</button><div class="gallery-count">${index+1} از ${pics.length}</div>`:"";
@@ -266,3 +266,25 @@ loadOnlineAds();
  },{passive:true});
  document.addEventListener("touchcancel",reset,{passive:true});
 })();
+
+
+/* Full-screen listing photo viewer: swipe, pinch and double-tap zoom */
+let yaftaPhotoViewerState=null;
+function openPhotoViewer(listingId,startIndex=0){
+ const listing=ads.find(x=>x.id===listingId);if(!listing||!listing.photos||!listing.photos.length)return;
+ let viewer=document.getElementById("yaftaPhotoViewer");
+ if(!viewer){viewer=document.createElement("div");viewer.id="yaftaPhotoViewer";viewer.className="photo-viewer";viewer.innerHTML='<button class="photo-viewer-close" onclick="closePhotoViewer()" aria-label="بستن">×</button><button class="photo-viewer-arrow prev" onclick="stepPhotoViewer(-1)" aria-label="عکس قبلی">‹</button><div class="photo-viewer-stage"><img class="photo-viewer-image" alt="تصویر بزرگ آگهی" draggable="false"></div><button class="photo-viewer-arrow next" onclick="stepPhotoViewer(1)" aria-label="عکس بعدی">›</button><div class="photo-viewer-count"></div><div class="photo-viewer-hint">برای بزرگ‌نمایی دو بار لمس کن · برای جابه‌جایی ورق بزن</div>';document.body.appendChild(viewer);bindPhotoViewer(viewer)}
+ yaftaPhotoViewerState={listingId,index:Math.max(0,Math.min(startIndex,listing.photos.length-1)),scale:1,x:0,y:0};
+ paintPhotoViewer();viewer.classList.add("active");document.body.classList.add("photo-viewer-open");
+}
+function paintPhotoViewer(){const v=document.getElementById("yaftaPhotoViewer");if(!v||!yaftaPhotoViewerState)return;const a=ads.find(x=>x.id===yaftaPhotoViewerState.listingId);if(!a)return;const s=yaftaPhotoViewerState;const img=v.querySelector(".photo-viewer-image");img.src=a.photos[s.index];img.style.transform="translate("+s.x+"px,"+s.y+"px) scale("+s.scale+")";v.querySelector(".photo-viewer-count").textContent=(s.index+1)+" از "+a.photos.length;v.querySelector(".photo-viewer-arrow.prev").style.display=a.photos.length>1?"grid":"none";v.querySelector(".photo-viewer-arrow.next").style.display=a.photos.length>1?"grid":"none";img.alt="تصویر "+(s.index+1)+" از "+a.photos.length}
+function closePhotoViewer(){const v=document.getElementById("yaftaPhotoViewer");if(v)v.classList.remove("active");document.body.classList.remove("photo-viewer-open");yaftaPhotoViewerState=null}
+function stepPhotoViewer(delta){if(!yaftaPhotoViewerState)return;const a=ads.find(x=>x.id===yaftaPhotoViewerState.listingId);if(!a||a.photos.length<2)return;yaftaPhotoViewerState.index=(yaftaPhotoViewerState.index+delta+a.photos.length)%a.photos.length;yaftaPhotoViewerState.scale=1;yaftaPhotoViewerState.x=0;yaftaPhotoViewerState.y=0;paintPhotoViewer()}
+function bindPhotoViewer(v){
+ const stage=v.querySelector(".photo-viewer-stage"),img=v.querySelector(".photo-viewer-image");let startX=0,startY=0,lastTap=0,pinchStart=0,pointers=new Map();
+ stage.addEventListener("pointerdown",e=>{stage.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1){startX=e.clientX;startY=e.clientY}else if(pointers.size===2){const p=[...pointers.values()];pinchStart=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);stage.dataset.startScale=String(yaftaPhotoViewerState?.scale||1)}});
+ stage.addEventListener("pointermove",e=>{if(!pointers.has(e.pointerId)||!yaftaPhotoViewerState)return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2){const p=[...pointers.values()],d=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);if(pinchStart>0){yaftaPhotoViewerState.scale=Math.max(1,Math.min(4,Number(stage.dataset.startScale||1)*d/pinchStart));if(yaftaPhotoViewerState.scale===1){yaftaPhotoViewerState.x=0;yaftaPhotoViewerState.y=0}paintPhotoViewer()}}else if(yaftaPhotoViewerState.scale>1){yaftaPhotoViewerState.x+=e.movementX;yaftaPhotoViewerState.y+=e.movementY;paintPhotoViewer()}});
+ const finish=e=>{if(!pointers.has(e.pointerId))return;const p=pointers.get(e.pointerId);pointers.delete(e.pointerId);if(pointers.size===0&&yaftaPhotoViewerState&&yaftaPhotoViewerState.scale===1){const dx=e.clientX-startX,dy=e.clientY-startY;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy))stepPhotoViewer(dx<0?1:-1)}};stage.addEventListener("pointerup",finish);stage.addEventListener("pointercancel",finish);
+ stage.addEventListener("click",e=>{if(e.target.closest("button"))return;const now=Date.now();if(now-lastTap<320&&yaftaPhotoViewerState){yaftaPhotoViewerState.scale=yaftaPhotoViewerState.scale>1?1:2.5;yaftaPhotoViewerState.x=0;yaftaPhotoViewerState.y=0;paintPhotoViewer()}lastTap=now});
+}
+document.addEventListener("keydown",e=>{if(!yaftaPhotoViewerState)return;if(e.key==="Escape")closePhotoViewer();if(e.key==="ArrowLeft")stepPhotoViewer(1);if(e.key==="ArrowRight")stepPhotoViewer(-1)});
