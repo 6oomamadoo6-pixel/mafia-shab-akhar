@@ -15,7 +15,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Validate app JavaScript and assets
+      - name: Validate app JavaScript, assets and button handlers
         run: |
           node --check app/src/main/assets/app.js
           test -s app/src/main/assets/app.css
@@ -23,7 +23,17 @@ jobs:
           grep -q 'href="app.css"' app/src/main/assets/index.html
           grep -q 'src="app.js"' app/src/main/assets/index.html
           grep -q '.overlay{display:flex}' app/src/main/assets/app.css
-          echo "YAFTA JavaScript and local assets validated."
+          node <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('app/src/main/assets/index.html', 'utf8');
+          const js = fs.readFileSync('app/src/main/assets/app.js', 'utf8');
+          const source = html + '\n' + js;
+          const declared = new Set([...source.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/g)].map(x => x[1]));
+          const handlers = new Set([...source.matchAll(/\b(?:onclick|onsubmit|onchange|oninput)="\s*([A-Za-z_$][\w$]*)\s*\(/g)].map(x => x[1]));
+          const missing = [...handlers].filter(name => name !== 'if' && !declared.has(name));
+          if (missing.length) throw new Error('Undefined button handlers: ' + missing.join(', '));
+          console.log('All static and generated button handlers resolve.');
+          NODE
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon
       - name: Upload APK
