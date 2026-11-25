@@ -35,6 +35,37 @@ function setFilter(f,b){filter=f;document.querySelectorAll(".chip").forEach(func
 function setNav(b){document.querySelectorAll(".nav").forEach(function(x){x.classList.remove("active")});b.classList.add("active")}
 function showHome(b){favMode=false;category="همه";setNav(b);loadOnlineAds()}
 function showFavorites(b){favMode=true;setNav(b);loadOnlineAds()}
+
+// Global operation feedback: delayed, reference-counted, and non-blocking for quick requests.
+(function(){
+ let active=0,showTimer=null,hideTimer=null,overlay=null;
+ function ensure(){
+  if(overlay)return overlay;
+  overlay=document.createElement("div");overlay.className="global-busy";overlay.id="globalBusy";overlay.setAttribute("role","status");overlay.setAttribute("aria-live","polite");
+  overlay.innerHTML='<div class="global-busy-card"><span class="global-busy-spinner"></span><b id="globalBusyText">در حال انجام...</b><small>لطفاً چند لحظه صبر کن</small></div>';
+  document.body.appendChild(overlay);return overlay;
+ }
+ window.yaftaBusy={
+  start:function(message){
+   active++;if(message){let el=ensure().querySelector("#globalBusyText");if(el)el.textContent=message}
+   clearTimeout(hideTimer);if(active===1){clearTimeout(showTimer);showTimer=setTimeout(()=>{if(active>0)ensure().classList.add("visible")},260)}
+  },
+  stop:function(){
+   active=Math.max(0,active-1);if(active===0){clearTimeout(showTimer);hideTimer=setTimeout(()=>{if(active===0&&overlay)overlay.classList.remove("visible")},100)}
+  },
+  run:async function(task,message){this.start(message);try{return await task()}finally{this.stop()}}
+ };
+ const nativeFetch=window.fetch.bind(window);
+ window.fetch=function(input,options){
+  const url=typeof input==="string"?input:(input&&input.url)||"";
+  const method=((options&&options.method)||(input&&input.method)||"GET").toUpperCase();
+  const ignored=url.includes("/api/v1/listings?")||url.includes("/api/v1/chats/")&&method==="GET";
+  const tracked=!ignored;
+  if(tracked)window.yaftaBusy.start(url.includes("cloudinary")?"در حال بارگذاری تصاویر...":"در حال دریافت اطلاعات...");
+  return nativeFetch(input,options).finally(()=>{if(tracked)window.yaftaBusy.stop()});
+ };
+})();
+
 const YAFTA_API_BASE="https://onyx-canyon-2808.de.deplexo.com";
 async function apiCall(path,options={}){options.headers=Object.assign({"Content-Type":"application/json"},options.headers||{},yaftaToken?{Authorization:"Bearer "+yaftaToken}:{});let r=await fetch(YAFTA_API_BASE+path,options);let d={};try{d=await r.json()}catch(parseError){}if(!r.ok){let error=new Error(d.detail||"خطا در ارتباط با سرور");error.status=r.status;throw error}return d}
 function openPromoLink(){location.href="https://dgka.me/PlLLC"}
