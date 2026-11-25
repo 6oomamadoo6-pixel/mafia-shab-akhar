@@ -451,3 +451,12 @@ html[data-theme="dark"] .auth-field input{background:#182126!important;border-co
 html[data-theme="dark"] .auth-footnote{border-color:#3b464b;color:#929fa4}
 html[data-theme="dark"] .auth-switch button{color:#8bb8d0}
 @media(max-width:380px){.auth-screen{padding:23px 19px 19px}.auth-intro{margin:25px 0 20px}.auth-intro h2{font-size:21px}}
+
+
+/* Marketplace management controls */
+.my-listing-tools{display:flex;gap:6px;flex-wrap:wrap;padding:0 10px 10px}
+.my-listing-tools .chip,.my-listing-tools .archive-button{font-size:10px;padding:7px 10px;border-radius:9px}
+.my-listing{display:flex;flex-direction:column;gap:4px}
+#advancedSearchButton{border-color:var(--blue);color:var(--blue);font-weight:700}
+#sheet .field input[type="number"],#sheet .field select{min-height:45px}
+#sheet .field input[type="checkbox"]{accent-color:var(--blue);vertical-align:middle}
