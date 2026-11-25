@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Gravity;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.ProgressBar;
 import android.webkit.ConsoleMessage;
 import android.webkit.ValueCallback;
@@ -26,16 +29,16 @@ public class MainActivity extends Activity {
     private ValueCallback<Uri[]> fileUploadCallback;
     private WebView webView;
     private WebViewAssetLoader assetLoader;
+    private View splashView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(
-            android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN
-        );
+        getWindow().setStatusBarColor(0xFFF3F6FA);
         getWindow().setNavigationBarColor(0xFFF3F6FA);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+        getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        );
 
         FrameLayout root = new FrameLayout(this);
         webView = new WebView(this);
@@ -43,6 +46,7 @@ public class MainActivity extends Activity {
             .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
             .build();
         webView.setBackgroundColor(0xFFF3F6FA);
+        webView.setVisibility(View.INVISIBLE);
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
@@ -55,11 +59,26 @@ public class MainActivity extends Activity {
         settings.setJavaScriptCanOpenWindowsAutomatically(false);
         settings.setSupportMultipleWindows(false);
         settings.setLoadsImagesAutomatically(true);
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(false);
+        settings.setLoadWithOverviewMode(false);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
 
         webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                view.setVisibility(View.VISIBLE);
+                if (splashView != null) {
+                    View splash = splashView;
+                    splash.animate().alpha(0f).setDuration(260).withEndAction(() -> {
+                        if (splash.getParent() instanceof FrameLayout) {
+                            ((FrameLayout) splash.getParent()).removeView(splash);
+                        }
+                        splashView = null;
+                    }).start();
+                }
+            }
+
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 return assetLoader.shouldInterceptRequest(request.getUrl());
@@ -102,6 +121,60 @@ public class MainActivity extends Activity {
         ));
         root.addView(pageProgress, progressParams);
 
+        FrameLayout splash = new FrameLayout(this);
+        splash.setBackgroundColor(0xFFF3F6FA);
+        LinearLayout splashContent = new LinearLayout(this);
+        splashContent.setOrientation(LinearLayout.VERTICAL);
+        splashContent.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        TextView logo = new TextView(this);
+        logo.setText("ی");
+        logo.setTextColor(0xFFFFFFFF);
+        logo.setTextSize(42);
+        logo.setGravity(Gravity.CENTER);
+        logo.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        GradientDrawable logoBackground = new GradientDrawable(
+            GradientDrawable.Orientation.TL_BR,
+            new int[] { 0xFF2789C5, 0xFF12568F }
+        );
+        logoBackground.setCornerRadius(dp(28));
+        logo.setBackground(logoBackground);
+        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(dp(82), dp(82));
+        logoParams.bottomMargin = dp(19);
+        splashContent.addView(logo, logoParams);
+
+        TextView appName = new TextView(this);
+        appName.setText("یافتا");
+        appName.setTextColor(0xFF173B58);
+        appName.setTextSize(27);
+        appName.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        splashContent.addView(appName);
+
+        TextView tagline = new TextView(this);
+        tagline.setText("بازار تازه‌ی خرید و فروش");
+        tagline.setTextColor(0xFF7A8FA2);
+        tagline.setTextSize(12);
+        LinearLayout.LayoutParams taglineParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        taglineParams.topMargin = dp(7);
+        taglineParams.bottomMargin = dp(25);
+        splashContent.addView(tagline, taglineParams);
+
+        ProgressBar splashProgress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        splashProgress.setIndeterminate(true);
+        splashProgress.setIndeterminateTintList(android.content.res.ColorStateList.valueOf(0xFF2789C5));
+        splashContent.addView(splashProgress, new LinearLayout.LayoutParams(dp(118), dp(3)));
+
+        FrameLayout.LayoutParams splashContentParams = new FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER
+        );
+        splash.addView(splashContent, splashContentParams);
+        root.addView(splash, new FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+        ));
+        splashView = splash;
+
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -138,6 +211,10 @@ public class MainActivity extends Activity {
 
         setContentView(root);
         webView.loadUrl("https://appassets.androidplatform.net/assets/index.html");
+    }
+
+    private int dp(int value) {
+        return (int) (value * getResources().getDisplayMetrics().density + 0.5f);
     }
 
     @Override
