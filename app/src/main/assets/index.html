@@ -170,7 +170,7 @@ if(adWizardStep===3){if(!listingProvince||!listingCity){toast("استان و ش�
 adWizardStep++;renderAdWizard()
 }
 function prevAdWizard(){captureAdWizardData();if(adWizardStep>1){adWizardStep--;renderAdWizard()}}
-function setAdPriceMode(m){adPriceMode=m;renderAdWizard()}
+function setAdPriceMode(m){if(adWizardStep===3)captureAdWizardData();adPriceMode=m;renderAdWizard()}
 function formatAdPrice(input){let digits=input.value.replace(/[^0-9۰-۹٠-٩]/g,"").replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));input.value=digits?Number(digits).toLocaleString("en-US").replace(/,/g,"٬").replace(/[0-9]/g,d=>"۰۱۲۳۴۵۶۷۸۹"[Number(d)]):""}
 function openAdProvincePicker(){if(!window.YAFTA_PROVINCES){toast("فهرست استان‌ها بارگذاری نشد");return}let rows=window.YAFTA_PROVINCES.map(p=>'<button class="location-row" onclick="listingProvince='+JSON.stringify(p.name).replace(/"/g,"&quot;")+';listingCity=\'\';renderAdWizard()">'+esc(p.name)+'　›</button>').join("");showSheet('<div class="sheet-head"><h3>انتخاب استان</h3><button class="close" onclick="renderAdWizard()">×</button></div><div class="location-list">'+rows+'</div>')}
 function openAdCityPicker(){let p=window.YAFTA_PROVINCES?.find(x=>x.name===listingProvince);if(!p)return;let cities=window.YAFTA_CITIES.filter(c=>c.province_id===p.id).sort((a,b)=>a.name.localeCompare(b.name,"fa"));let rows=cities.map(c=>'<button class="location-row" onclick="listingCity='+JSON.stringify(c.name).replace(/"/g,"&quot;")+';renderAdWizard()">'+esc(c.name)+'</button>').join("");showSheet('<div class="sheet-head"><h3>انتخاب شهر '+esc(listingProvince)+'</h3><button class="close" onclick="renderAdWizard()">×</button></div><div class="location-list">'+rows+'</div>')}
