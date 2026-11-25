@@ -76,7 +76,8 @@ jobs:
         run: gradle assembleDebug --no-daemon
       - name: Record APK signing certificate fingerprint
         run: |
-          keytool -printcert -jarfile app/build/outputs/apk/debug/app-debug.apk | grep '^ *SHA256:' > app/build/outputs/apk/debug/signing-fingerprint.txt
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -n 1)
+          "$APKSIGNER" verify --print-certs app/build/outputs/apk/debug/app-debug.apk | grep 'Signer #1 certificate SHA-256 digest' > app/build/outputs/apk/debug/signing-fingerprint.txt
           cat app/build/outputs/apk/debug/signing-fingerprint.txt
       - name: Save stable Android signing key
         uses: actions/cache/save@v4
