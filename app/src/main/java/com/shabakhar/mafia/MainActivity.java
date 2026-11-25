@@ -13,18 +13,17 @@ import android.webkit.WebViewClient;
 public class MainActivity extends Activity {
     private static final int FILE_CHOOSER_REQUEST = 4102;
     private ValueCallback<Uri[]> fileUploadCallback;
+    private WebView webView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(0xFFEAF3FC);
+        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setNavigationBarColor(0xFFEAF3FC);
-        getWindow().getDecorView().setSystemUiVisibility(
-            android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
-            android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-        );
+        getWindow().getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
 
         WebView web = new WebView(this);
+        webView = web;
         web.setWebViewClient(new WebViewClient());
         web.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -53,6 +52,16 @@ public class MainActivity extends Activity {
         web.setBackgroundColor(0xFFEAF3FC);
         setContentView(web);
         web.loadUrl("file:///android_asset/index.html");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (webView == null) { super.onBackPressed(); return; }
+        webView.evaluateJavascript("(function(){return window.handleAndroidBack ? window.handleAndroidBack() : false;})()", value -> {
+            if ("true".equals(value)) return;
+            if (webView != null && webView.canGoBack()) webView.goBack();
+            else MainActivity.super.onBackPressed();
+        });
     }
 
     @Override
