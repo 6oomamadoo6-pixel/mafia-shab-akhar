@@ -497,3 +497,26 @@ button:active{transform:scale(.975)}
 .ad{animation:yaftaCardIn .22s ease both}
 @keyframes yaftaCardIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* YAFTA 0.7.0 — native-feeling busy feedback and smoother motion */
+.global-busy{position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(12,25,38,.20);backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s ease,visibility .2s ease,backdrop-filter .22s ease,-webkit-backdrop-filter .22s ease}
+.global-busy.visible{opacity:1;visibility:visible;pointer-events:auto;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.global-busy-card{min-width:164px;max-width:230px;display:flex;flex-direction:column;align-items:center;gap:11px;padding:23px 25px 20px;border:1px solid rgba(255,255,255,.68);border-radius:22px;background:rgba(255,255,255,.94);box-shadow:0 18px 55px rgba(8,28,45,.20);transform:translateY(8px) scale(.97);opacity:0;transition:transform .24s cubic-bezier(.2,.8,.2,1),opacity .2s ease}
+.global-busy.visible .global-busy-card{transform:translateY(0) scale(1);opacity:1}
+.global-busy-card b{font-size:12px;font-weight:900;color:#1c3a52}
+.global-busy-card small{font-size:10px;color:#718397}
+.global-busy-spinner{width:39px;height:39px;border-radius:50%;border:3px solid rgba(35,112,164,.15);border-top-color:#247db8;border-left-color:#247db8;animation:yaftaSpinner .72s linear infinite;filter:drop-shadow(0 3px 6px rgba(36,125,184,.16))}
+@keyframes yaftaSpinner{to{transform:rotate(360deg)}}
+html[data-theme="dark"] .global-busy{background:rgba(0,0,0,.27)}
+html[data-theme="dark"] .global-busy-card{background:rgba(31,43,51,.96);border-color:#40515c;box-shadow:0 18px 55px rgba(0,0,0,.4)}
+html[data-theme="dark"] .global-busy-card b{color:#edf4f7}
+html[data-theme="dark"] .global-busy-card small{color:#a8b8c1}
+html[data-theme="dark"] .global-busy-spinner{border-color:rgba(111,177,215,.18);border-top-color:#70b5dc;border-left-color:#70b5dc}
+html,body{scroll-behavior:smooth}
+button,.ad,.cat,.sheet,.promo-slide,.nav,.profile-action,.chat-row{backface-visibility:hidden;-webkit-tap-highlight-color:transparent}
+.ad,.cat,.profile-action,.chat-row{transform:translateZ(0);transition:transform .2s cubic-bezier(.2,.75,.25,1),box-shadow .22s ease,border-color .22s ease}
+.ad:active,.cat:active,.profile-action:active,.chat-row:active{transform:translateZ(0) scale(.985)}
+.sheet{will-change:transform,opacity}
+.photo img{will-change:transform}
+@media(prefers-reduced-motion:reduce){.global-busy,.global-busy-card{transition:none!important}.global-busy-spinner{animation-duration:1.4s!important}}
