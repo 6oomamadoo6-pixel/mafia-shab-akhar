@@ -260,7 +260,7 @@ html[data-theme="dark"] .bottom .nav.add .ni{color:#fff!important}
 
 /* Home category preview: exactly two rows, then expand */
 .cats:not(.expanded) .cat:nth-child(n+9){display:none!important}
-.more-cats{display:block;margin:12px auto 2px;padding:10px 18px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--blue);font:700 12px inherit}
+.more-cats{display:block;margin:12px auto 2px;padding:10px 18px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--blue);font-family:inherit;font-size:12px;font-weight:700}
 .more-cats:active{transform:scale(.98)}
 .cats.expanded+.more-cats{margin-top:13px}
 html[data-theme="dark"] .more-cats{border-color:#38536a;background:#1b2936;color:#8bcfff}
