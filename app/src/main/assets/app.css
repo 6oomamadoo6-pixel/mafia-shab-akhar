@@ -83,3 +83,12 @@ body{background:#f3f6fa;color:var(--ink);font-family:Tahoma,"Segoe UI",sans-seri
 .my-listing-open{flex:1;min-width:0;background:transparent;text-align:right;color:#263e53}
 .my-listing-open b{display:block;font-size:12px;line-height:1.8}.my-listing-open small{display:block;font-size:10px;color:#8797a5;margin-top:5px}
 .archive-button{background:#fff1f1;color:#b94c4c;border-radius:10px;padding:9px 10px;font-size:10px}
+
+.detail-no-photo{height:100%;min-height:230px;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#8da2b4;font-size:46px}
+.detail-no-photo small{font-size:11px}
+.gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:#102d48a8;color:white;font-size:26px;z-index:2;display:grid;place-items:center}
+.gallery-arrow.prev{right:10px}.gallery-arrow.next{left:10px}
+.gallery-thumbs{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 2px}
+.gallery-thumbs button{padding:2px;border:2px solid transparent;background:transparent;border-radius:11px;flex:none}
+.gallery-thumbs button.active{border-color:#1769aa}
+.gallery-thumbs img{width:58px;height:58px;object-fit:cover;border-radius:8px;display:block}
