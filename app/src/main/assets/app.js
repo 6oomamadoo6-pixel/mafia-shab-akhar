@@ -320,6 +320,8 @@ function installAdvancedSearch(){
  button.textContent="فیلتر پیشرفته";
  button.onclick=openAdvancedSearch;
  filters.appendChild(button);
+ const save=document.createElement("button");save.className="chip";save.textContent="ذخیره جست‌وجو";save.onclick=saveCurrentSearch;filters.appendChild(save);
+ const saved=document.createElement("button");saved.className="chip";saved.textContent="جست‌وجوهای من";saved.onclick=showSavedSearches;filters.appendChild(saved);
 }
 function openAdvancedSearch(){
  const f=yaftaAdvancedFilters||{};
@@ -343,3 +345,8 @@ function applyAdvancedSearch(){
 }
 function clearAdvancedSearch(){yaftaAdvancedFilters={};closeSheet();loadOnlineAds();toast("فیلترها پاک شدند")}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",installAdvancedSearch);else installAdvancedSearch();
+
+async function saveCurrentSearch(){if(!yaftaToken){showAuth("login");return}let filters={q:document.getElementById("search").value.trim(),category:category==="همه"?"":categoryToApi(category),city:selectedCity,...yaftaAdvancedFilters};showSheet('<div class="sheet-head"><h3>ذخیره جست‌وجو</h3><button class="close" onclick="closeSheet()">×</button></div><div class="field"><label>نام جست‌وجو</label><input id="savedSearchTitle" maxlength="80" placeholder="مثلاً گوشی تا ۲۰ میلیون"></div><button class="primary" onclick="submitSavedSearch()">ذخیره</button>');window.yaftaPendingSearch=filters}
+async function submitSavedSearch(){let title=document.getElementById("savedSearchTitle").value.trim()||"جست‌وجوی من";try{await apiCall("/api/v1/users/me/saved-searches",{method:"POST",body:JSON.stringify({title,filters:window.yaftaPendingSearch||{}})});closeSheet();toast("جست‌وجو ذخیره شد")}catch(e){toast(e.message)}}
+async function showSavedSearches(){if(!yaftaToken){showAuth("login");return}try{let data=await apiCall("/api/v1/users/me/saved-searches");let rows=(data.items||[]).map(x=>'<button class="profile-action" onclick="applySavedSearch('+x.id+')"><b>'+esc(x.title)+'</b><small>اجرای جست‌وجوی ذخیره‌شده</small></button>').join("");showSheet('<div class="sheet-head"><h3>جست‌وجوهای من</h3><button class="close" onclick="closeSheet()">×</button></div>'+(rows||'<div class="empty">جست‌وجویی ذخیره نکردی.</div>'))}catch(e){toast(e.message)}}
+async function applySavedSearch(id){try{let data=await apiCall("/api/v1/users/me/saved-searches");let item=(data.items||[]).find(x=>x.id===id);if(!item)return;let f=item.filters||{};document.getElementById("search").value=f.q||"";category=f.category||"همه";selectedCity=f.city||"";yaftaAdvancedFilters={};["min_price","max_price","province","condition","sort","has_images"].forEach(k=>{if(f[k]!==undefined)yaftaAdvancedFilters[k]=f[k]});closeSheet();loadOnlineAds();toast("جست‌وجوی ذخیره‌شده اجرا شد")}catch(e){toast(e.message)}}
