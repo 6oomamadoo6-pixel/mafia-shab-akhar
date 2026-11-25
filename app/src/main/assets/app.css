@@ -483,3 +483,17 @@ body{padding-bottom:calc(76px + env(safe-area-inset-bottom))!important}
 .detail-actions .share-btn{min-width:0;border-radius:13px;background:var(--surface-soft,#eaf2f8);color:var(--blue,#1769aa);font-weight:800;padding:12px 8px;font-size:11px}
 @media(max-width:360px){.bottom{padding-left:3px!important;padding-right:3px!important}.bottom .nav{font-size:9px!important}.bottom .nav.add .ni{width:49px!important;height:45px!important;min-width:49px!important}}
 html[data-theme="dark"] .bottom .nav.add .ni{border-color:#1a2228!important}
+
+/* YAFTA 0.6.9 — motion and bottom navigation */
+.bottom{grid-template-columns:repeat(5,minmax(0,1fr))!important;min-height:calc(70px + env(safe-area-inset-bottom))!important;padding-bottom:calc(7px + env(safe-area-inset-bottom))!important}
+.bottom .nav{justify-content:center!important;align-self:stretch!important}
+.bottom .nav.add{transform:translateY(-2px)}
+.bottom .nav.add .ni{width:58px!important;height:50px!important;font-size:36px!important;border-radius:17px!important;box-shadow:0 8px 22px #1769aa3b!important}
+button,.cat,.ad,.chip,.primary,.promo-slide,.nav{transition:transform .16s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,opacity .18s ease}
+button:active{transform:scale(.975)}
+.nav.add:active{transform:translateY(-2px) scale(.96)}
+.sheet{animation:yaftaSheetIn .24s cubic-bezier(.2,.75,.25,1)}
+@keyframes yaftaSheetIn{from{transform:translateY(22px);opacity:.7}to{transform:translateY(0);opacity:1}}
+.ad{animation:yaftaCardIn .22s ease both}
+@keyframes yaftaCardIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
